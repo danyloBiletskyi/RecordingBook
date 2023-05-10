@@ -33,7 +33,7 @@
                             MinWidth="200"
                             MaxWidth="250"
                             BorderThickness="0"
-                            Text="Search" 
+                            Text="Search the record" 
                             Margin="5 0 0 0"
                             VerticalAlignment="Center"
                             FontSize="20"/>
