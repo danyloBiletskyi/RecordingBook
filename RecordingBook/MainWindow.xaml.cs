@@ -20,9 +20,19 @@ namespace RecordingBook
     /// </summary>
     public partial class MainWindow : Window
     {
+        public List<Record> record = new List<Record>();
         public MainWindow()
         {
             InitializeComponent();
+
+
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            record.Add(new Record() { FirstName = "Anna", SecondName = "Lysenko", LastName = "Mykolaivna", Age = 18, PhoneNumber = "+38092312313" });
+            recordList.Items.Add(record);
         }
     }
 }
