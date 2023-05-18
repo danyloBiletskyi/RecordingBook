@@ -20,7 +20,7 @@
             </Setter>
         </Style>
     </Window.Resources>
-    <Grid>
+    <Grid Name="fullForm">
         <Grid.ColumnDefinitions>
             <ColumnDefinition MaxWidth="450px"/>
             <ColumnDefinition/>
@@ -62,15 +62,16 @@
 
                 <Grid Grid.Row="1" Background="#B3E5FC">
                 <DockPanel>
-                    
-                    <Button Width="40" DockPanel.Dock="Right" BorderThickness="0">
+
+                        <Button Name="delete_button" Width="40" DockPanel.Dock="Right" BorderThickness="0" Style="{StaticResource SomeButtonStyle}" MouseEnter="deleteButton_enter" MouseLeave="deleteButton_leave"  >
+                            <Button.Background>
+                                <ImageBrush ImageSource= "{Binding ImageUrl_Delete}"/>
+                            </Button.Background>
+                        </Button>
+
+                        <Button  Name="add_button" Width="40" HorizontalAlignment="Right" BorderThickness="0" Click="add_button_Click" Style="{StaticResource SomeButtonStyle}" MouseEnter="addButton_enter" MouseLeave="addButton_leave" >
                         <Button.Background>
-                            <ImageBrush ImageSource="/Delete_480px.png"/>
-                        </Button.Background>
-                    </Button>
-                        <Button  Name="add_button" Width="40" HorizontalAlignment="Right" BorderThickness="0" Click="add_button_Click" Style="{StaticResource SomeButtonStyle}">
-                        <Button.Background>
-                            <ImageBrush ImageSource="/add_144px.png"/>
+                            <ImageBrush ImageSource="{Binding ImageUrl_Add}"/>
                         </Button.Background>
                     </Button>
                 </DockPanel>
@@ -141,7 +142,8 @@
                 </Grid>
             </Grid>
         </Border>
-        <Grid Grid.Column="1" Name="setBlock">
+        <TextBlock Name="TBNothingIs" Grid.Column="1" FontSize="40" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Поки нічого немає"/>
+        <Grid Grid.Column="1" Name="setBlock" Visibility="Hidden">
             <Grid.RowDefinitions>
                 <RowDefinition MaxHeight="200"/>
                 <RowDefinition MaxHeight="220"/>
@@ -209,7 +211,16 @@
                             <TextBlock Text="Дата народження:" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Right" Padding="0 0 20 0"></TextBlock>
                         </Grid>
                         <Grid Grid.Column="1">
-                            <DatePicker MaxWidth="150" VerticalAlignment="Center" HorizontalAlignment="Left"></DatePicker>
+                            <DatePicker MaxWidth="150" VerticalAlignment="Center" HorizontalAlignment="Left" Name="dateBirthCa"  >
+                                <DatePicker.Resources>
+                                    <Style TargetType="DatePickerTextBox">
+                                        <Setter Property="Focusable" Value="False"/>
+                                    </Style>
+                                    <Style TargetType="Calendar">
+                                        <Setter Property="DisplayMode" Value="Year"/>
+                                    </Style>
+                                </DatePicker.Resources>
+                            </DatePicker>
                         </Grid>
                     </Grid>
                 </Border>
@@ -252,7 +263,7 @@
                                     <TextBlock FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Right" Text="Країна:" Margin="0 0 10 0"/>
                                 </Grid>
                                 <Grid Grid.Column="1">
-                                    <ComboBox Name="CBCountry" Width="190" MaxHeight="25" HorizontalAlignment="Left"></ComboBox>
+                                    <ComboBox Name="CBCountry" Width="190" MaxHeight="25" HorizontalAlignment="Left" SelectionChanged="combBox_selectionChanged"/>
                                 </Grid>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -313,7 +324,12 @@
                         <TextBlock FontSize="20" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="30 0 20 0" Text="Додаткова інформація:"></TextBlock>
                     </Grid>
                     <Grid Grid.Column="1">
-                        <TextBox FontSize="20" Height="200" Width="600" VerticalAlignment="Top" HorizontalAlignment="Left" MinWidth="300"></TextBox>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" FontSize="20" Height="200" Width="550" VerticalAlignment="Top" HorizontalAlignment="Left"></TextBox>
+                        <Button Name="applyButton" Width="80" Height="30" FontSize="16" Content="Прийняти" Grid.Column="1" VerticalAlignment="Bottom" Margin="0 0 0 15" Click="applyClick"/>
                     </Grid>
                 </Grid>
             </Grid>
