@@ -19,6 +19,42 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="ListBoxNoHighLight" TargetType="ListBoxItem">
+            <Setter Property="Background" Value="#58C5F9"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#3AA7DC"/>
+                </Trigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsSelected" Value="True"/>
+                        <Condition Property="Selector.IsSelectionActive" Value="True"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="#228DC1"/>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="TextBox" x:Key="ErrorTextBoxStyle">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="BorderBrush" Value="Red" />
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                    <Setter Property="ToolTipService.ShowDuration" Value="60000" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+
+
     </Window.Resources>
     <Grid Name="fullForm">
         <Grid.ColumnDefinitions>
@@ -43,6 +79,7 @@
                     <DockPanel x:Name="St" Margin="5,2,5,2"
                                 Background="#d4f0fc" HorizontalAlignment="Right">
                             <TextBox Background="#d4f0fc"
+                            Name="searchField"
                             DockPanel.Dock="Left"
                             MinWidth="300"
                             MaxWidth="250"
@@ -51,7 +88,7 @@
                             Margin="5 0 5 0"
                             VerticalAlignment="Center"
                             FontSize="20" HorizontalAlignment="Left"/>
-                            <Button Width="26.6px" HorizontalAlignment="Right" Margin="15 0 0 0" DockPanel.Dock="Right" BorderThickness="0">
+                            <Button Width="26.6px" HorizontalAlignment="Right" Name="searchButton" Margin="15 0 0 0" DockPanel.Dock="Right" BorderThickness="0" Click="searchButton_click">
                                 <Button.Background>
                                     <ImageBrush ImageSource="/search_480px.png"/>
                                 </Button.Background>
@@ -77,11 +114,14 @@
                 </DockPanel>
             </Grid>
                 <Grid Grid.Row="2" >
-                    <ListBox Background="#E5F6FE" Name="recordList" Padding="-1" SelectionChanged="recordList_SelectionChanged">
+                    <ListBox  Background="#E5F6FE" Name="recordList" Padding="-1" SelectionChanged="recordList_SelectionChanged">
+                        <ListBox.ItemContainerStyle>
+                            <Style BasedOn="{StaticResource ListBoxNoHighLight}" TargetType="ListBoxItem" />
+                        </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Border BorderThickness="0 0 0 1" BorderBrush="Black" Width="500px" Margin="-6 -2 -2 0">
-                                    <Grid Height="100px" Width="Auto" HorizontalAlignment="Stretch" Background="#58C5F9">
+                                    <Grid Height="100px" Width="Auto" HorizontalAlignment="Stretch">
                                     <Grid.RowDefinitions>
                                         <RowDefinition/>
                                         <RowDefinition/>
@@ -185,7 +225,7 @@
                             <TextBlock Text="Ім'я*" FontSize="18" VerticalAlignment="Center"/>
                         </Grid>
                         <Grid Grid.Column="1" Margin="6">
-                            <TextBox Name="firstName" FontSize="18" Height="30" VerticalAlignment="Center"></TextBox>
+                            <TextBox Name="firstName" Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" FontSize="18" Height="30" VerticalAlignment="Center" Style="{StaticResource ErrorTextBoxStyle}" TextChanged="firstName_textChanged" LostFocus="firstName_lostFocus" />
                         </Grid>
                     </Grid>
                     <Grid Grid.Column="2">

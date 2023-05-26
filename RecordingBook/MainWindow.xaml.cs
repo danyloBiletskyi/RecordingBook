@@ -31,6 +31,7 @@ namespace RecordingBook
 
         public MainWindow()
         {
+            DataContext = new Record();
             InitializeComponent();
             CountryNames = getCountryNames();
             List<string> CountryNames_list = CountryNames.Keys.ToList();
@@ -73,17 +74,31 @@ namespace RecordingBook
                 fullForm.Children.Remove(TBNothingIs);
             }
             setBlock.Visibility = Visibility.Visible;
-            gridSinchronization();
+            listBoxItem_Sinchronization();
+
+            Record currentRecord = recordList.SelectedItem as Record;
+            if (currentRecord != null)
+            {
+                gridData_Sinchronization(currentRecord);
+            }
         }
 
-        private void gridSinchronization()
+        private void listBoxItem_Sinchronization()
         {
-            Record CurrentRecord = record[record.Count-1];
+            Record CurrentRecord = recordList.SelectedItem as Record; ;
             secondName.Text = CurrentRecord.SecondName;
             firstName.Text = CurrentRecord.FirstName;
             lastName.Text = CurrentRecord.LastName;
             
         }
+
+        private void gridData_Sinchronization(Record currentRecord)
+        {
+            currentRecord.FirstName = firstName.Text;
+            currentRecord.LastName = lastName.Text;
+            currentRecord.SecondName= secondName.Text;
+        }
+
         private void NumberValidationTB(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
@@ -133,14 +148,18 @@ namespace RecordingBook
 
         private void applyClick(object sender, RoutedEventArgs e)
         {
-            Record CurrentRecord = record[record.Count - 1];
+            Record CurrentRecord = recordList.SelectedItem as Record;
 
-            CurrentRecord.FirstName = firstName.Text;
-            CurrentRecord.LastName = lastName.Text;
-            CurrentRecord.SecondName = secondName.Text;
-            CurrentRecord.Age = HowOld().ToString();
-            recordList.Items.Refresh();
-            add_button.IsEnabled = true;
+            if (CurrentRecord != null)
+            {
+                CurrentRecord.FirstName = firstName.Text;
+                CurrentRecord.LastName = lastName.Text;
+                CurrentRecord.SecondName = secondName.Text;
+                CurrentRecord.Age = HowOld().ToString();
+                recordList.Items.Refresh();
+                add_button.IsEnabled = true;
+            }
+
         }
         private int HowOld()
         {
@@ -200,5 +219,59 @@ namespace RecordingBook
                 phoneNumber.Text = phoneNumber.Text.ToString()[0] + CountryNames[selectedValue];
             }
         }
+
+        private void searchButton_click(object sender, RoutedEventArgs e)
+        {
+            int countPosition = 0;
+            if (searchField.Text[0] != '@')
+            {
+                for(int i = recordList.Items.Count - 1; i >=0; i--)
+                {
+                    Record currRec =(Record) recordList.Items.GetItemAt(i);
+                    if(currRec.FirstName == searchField.Text)
+                    {
+                        recordList.Items.RemoveAt(i);
+                        recordList.Items.Insert(0, currRec);
+                        countPosition++;
+                    }
+                }
+                for(int i = countPosition-1; i < recordList.Items.Count - 1; i++)
+                {
+                    ListBoxItem item = (ListBoxItem)recordList.ItemContainerGenerator.ContainerFromIndex(i);
+                    item.Visibility= Visibility.Hidden;
+                }
+            }
+        }
+        private void ValidateTextBox (object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+
+            if(textBox != null && !string.IsNullOrWhiteSpace(textBox.Text)) 
+            {
+                textBox.BorderBrush = new SolidColorBrush(System.Windows.Media.Colors.Red);
+            }
+        }
+
+        private void firstName_textChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            textBox.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+
+
+        }
+
+        private void firstName_lostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            BindingExpression bindingExpression = textBox.GetBindingExpression(TextBox.TextProperty);
+            bindingExpression.UpdateSource();
+
+            if (!bindingExpression.HasError)
+            {
+                string propertyName = bindingExpression.ParentBinding.Path.Path;
+                ((Record)DataContext).ClearErrors(propertyName);
+            }
+        }
     }
 }
+
