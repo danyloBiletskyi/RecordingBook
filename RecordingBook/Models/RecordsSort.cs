@@ -55,7 +55,7 @@ namespace RecordingBook.Models
             return records;
         }
 
-        private static ObservableCollection<Record> SortByDateNewFirst(ObservableCollection<Record> records)
+        private static ObservableCollection<Record> SortByDateNewLast(ObservableCollection<Record> records)
         {
             ObservableCollection<Record> sortedRecords = new ObservableCollection<Record>(records.OrderBy(record => record.dateOfCreation));
             if (sortedRecords != null)
@@ -65,7 +65,7 @@ namespace RecordingBook.Models
             return records;
         }
 
-        private static ObservableCollection <Record> SortByDateNewLast(ObservableCollection<Record> records)
+        private static ObservableCollection <Record> SortByDateNewFirst(ObservableCollection<Record> records)
         {
             ObservableCollection<Record> sortedRecords = new ObservableCollection<Record>(records.OrderByDescending(record => record.dateOfCreation));
             if (sortedRecords != null)

@@ -19,7 +19,7 @@ namespace RecordingBook.Models
             Age = "age";
             PhoneNumber = "+(number)";
             dateOfCreation= DateTime.Now;
-
+            formTheGreeting = false;
             recordID = new Random().Next();
         }
         private readonly Dictionary<string, List<string>> _propertyErrors = new Dictionary<string, List<string>>();
@@ -102,6 +102,7 @@ namespace RecordingBook.Models
         public DateTime DateOfBirth { get; set; } = DateTime.Now;
         public DateTime dateOfCreation { get; set; }
         public int recordID { get; set; }
+        public bool formTheGreeting { get; set; }
 
 
 
