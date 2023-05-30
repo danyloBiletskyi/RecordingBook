@@ -41,7 +41,7 @@ namespace RecordingBook
             Records = RecordManager.GetRecord();
 
             SaveLoadInitialise.Load(Records);
-
+            sortBy.SelectedIndex = 0;
             DataContext = this;
             CountryNames = DBCountryNames_Initialiser.GetCountryData();
             List<string> CountryNames_list = CountryNames.Keys.ToList();
@@ -100,8 +100,7 @@ namespace RecordingBook
         {
             ListBox Lb = sender as ListBox;
             CurrentRecord = Lb.SelectedItem as Record;
-            TBNothingIs.Visibility = Visibility.Hidden;
-            setBlock.Visibility = Visibility.Visible;
+            ViewControl.MakeVisible(setBlock, TBNothingIs);
             _isComboBoxChanged = false;
         }
 
@@ -158,8 +157,20 @@ namespace RecordingBook
         private void sortBy_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBoxItem selectedItem = sortBy.SelectedItem as ComboBoxItem;
-            RecordsSort.GetSortedRecord(selectedItem.Content.ToString(), Records);
+            var sortedRecords = RecordsSort.GetSortedRecord(selectedItem.Content.ToString(), Records);
+            Records.Clear();
+
+            foreach(var sortedRecord in sortedRecords)
+            {
+                Records.Add(sortedRecord);
+            }
             recordList.Items.Refresh();
+            recordList.SelectedIndex= 0;
+        }
+
+        private void birthdayGet_Click(object sender, RoutedEventArgs e)
+        {
+            CreateGreeting.whoHasGotABirthday(Records);
         }
     }
 }

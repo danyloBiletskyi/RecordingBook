@@ -85,9 +85,9 @@ namespace RecordingBook.Models
             var csv = new StringBuilder();
             foreach (Record record in records)
             {
-                var toWrite = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}", record.SecondName, record.FirstName, record.LastName,
+                var toWrite = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13}", record.SecondName, record.FirstName, record.LastName,
                     record.Age, record.StreetAndNumber, record.Country, record.City, record.PhoneNumber, record.PlaceOfWorkStudy, record.AdditionalInfo,
-                    record.DateOfBirth.ToShortDateString(), record.dateOfCreation.ToString(), record.recordID.ToString()); 
+                    record.DateOfBirth.ToShortDateString(), record.dateOfCreation.ToString(), record.recordID.ToString(), record.formTheGreeting.ToString()); 
                 csv.AppendLine(toWrite);
             }
 
@@ -110,7 +110,8 @@ namespace RecordingBook.Models
                     recordInfo = line.Split(',').ToList();
                     Records.Add(new Record() { SecondName = recordInfo[0], FirstName = recordInfo[1], LastName = recordInfo[2], Age = recordInfo[3],
                         StreetAndNumber = recordInfo[4], Country = recordInfo[5], City = recordInfo[6], PhoneNumber = recordInfo[7], PlaceOfWorkStudy = recordInfo[8],
-                        AdditionalInfo = recordInfo[9], DateOfBirth = DateTime.Parse(recordInfo[10]), dateOfCreation = DateTime.Parse(recordInfo[11]), recordID = int.Parse(recordInfo[12])});
+                        AdditionalInfo = recordInfo[9], DateOfBirth = DateTime.Parse(recordInfo[10]), dateOfCreation = DateTime.Parse(recordInfo[11]), recordID = int.Parse(recordInfo[12]),
+                    formTheGreeting = bool.Parse(recordInfo[13])});
                 }
                 RewriteCommasBack(Records);
                 reader.Close();
@@ -129,18 +130,18 @@ namespace RecordingBook.Models
                     recordInfo = line.Split(',').ToList();
                     if (record.recordID.ToString() != recordInfo[12])
                     {
-                        line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}", record.SecondName, record.FirstName, record.LastName,
+                        line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13}", record.SecondName, record.FirstName, record.LastName,
                             record.Age, record.StreetAndNumber, record.Country, record.City, record.PhoneNumber, record.PlaceOfWorkStudy, record.AdditionalInfo,
-                            record.DateOfBirth.ToShortDateString(), record.dateOfCreation.ToString(), record.recordID.ToString());
+                            record.DateOfBirth.ToShortDateString(), record.dateOfCreation.ToString(), record.recordID.ToString(), record.formTheGreeting.ToString());
                     }
                     recordInfo.Add(line);
                 }
             }
             else
             {
-                string line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}", record.SecondName, record.FirstName, record.LastName,
+                string line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13}", record.SecondName, record.FirstName, record.LastName,
                             record.Age, record.StreetAndNumber, record.Country, record.City, record.PhoneNumber, record.PlaceOfWorkStudy, record.AdditionalInfo,
-                            record.DateOfBirth.ToShortDateString(), record.dateOfCreation.ToString(), record.recordID.ToString());
+                            record.DateOfBirth.ToShortDateString(), record.dateOfCreation.ToString(), record.recordID.ToString(), record.formTheGreeting.ToString());
                 recordInfo.Add(line);
             }
             reader.Close();

@@ -21,5 +21,17 @@ namespace RecordingBook.Additional_ViewAndComfort
                 TB.SelectionStart = 1;
             }
         }
+
+        public static void MakeHidden(Grid setBlock, TextBlock tbnothing_is)
+        {
+            setBlock.Visibility = System.Windows.Visibility.Hidden;
+            tbnothing_is.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        public static void MakeVisible(Grid setBlock, TextBlock tbnothing_is)
+        {
+            setBlock.Visibility = System.Windows.Visibility.Visible;
+            tbnothing_is.Visibility = System.Windows.Visibility.Hidden;
+        }
     }
 }

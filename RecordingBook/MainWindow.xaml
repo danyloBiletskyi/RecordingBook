@@ -61,7 +61,7 @@
                         <Setter.Value>
                             <ControlTemplate>
                                 <Grid Background= "#e5f6fe" >
-                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25">Тут поки пусто</TextBlock>
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25">Тут поки пусто</TextBlock>
                                 </Grid>
                             </ControlTemplate>
                         </Setter.Value>
@@ -86,7 +86,7 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0" Background="#89d6fb">
-                    
+
                     <Border Background="#d4f0fc"
                         MaxHeight="40"
                         Margin="5 0 5 0"
@@ -94,7 +94,7 @@
                         BorderThickness="2"
                         VerticalAlignment="Center"
                         CornerRadius="5" HorizontalAlignment="Center">
-                        
+
                         <DockPanel x:Name="St" Margin="5,2,5,2"
                                 Background="#d4f0fc" HorizontalAlignment="Right">
                             <TextBox Background="#d4f0fc"
@@ -122,7 +122,13 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0">
-                        <ComboBox x:Name="sortBy" SelectionChanged="sortBy_SelectionChanged">
+                        <ComboBox x:Name="sortBy" SelectionChanged="sortBy_SelectionChanged" Background="#B3E5FC" MaxHeight="30" Width="120" HorizontalAlignment="Left" Margin="10 0 0 0">
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="ComboBoxItem">
+                                    <Setter Property="Background" Value="#B3E5FC" />
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
                             <ComboBoxItem Content="Ім'я від А-Я" />
                             <ComboBoxItem Content="Ім'я від Я-А"/>
                             <ComboBoxItem Content="Спочатку нові"/>
@@ -188,7 +194,7 @@
                                 <ImageBrush ImageSource="pack://application:,,,/images/add_144px.png"/>
                             </Button.Background>
                         </Button>
-                        <Button HorizontalAlignment="Right" Margin="7 0 0 0" x:Name="SaveAllButton" Width="40" BorderThickness="0" FontSize="20" Style="{StaticResource SomeButtonStyle}" >
+                        <Button DockPanel.Dock="Right" Margin="7 0 0 0" x:Name="SaveAllButton" Width="40" BorderThickness="0" FontSize="20" Style="{StaticResource SomeButtonStyle}" >
                             <Button.Resources>
                                 <ImageBrush ImageSource="pack://application:,,,/images/save_144px.png" x:Key="IMB_saveBDefault"/>
                                 <ImageBrush ImageSource="pack://application:,,,/images/save_144px_enter.png" x:Key="IMB_saveBEnter"/>
@@ -215,6 +221,35 @@
                             </Button.Triggers>
                             <Button.Background>
                                 <ImageBrush ImageSource="pack://application:,,,/images/save_144px.png"/>
+                            </Button.Background>
+                        </Button>
+                        <Button HorizontalAlignment="Right" Margin="7 0 0 0" x:Name="birthdayGet" Width="40" BorderThickness="0" FontSize="20" Style="{StaticResource SomeButtonStyle}" Click="birthdayGet_Click" >
+                            <Button.Resources>
+                                <ImageBrush ImageSource="pack://application:,,,/images/birthday_cake_512px.png" x:Key="IMB_birthdayBDefault"/>
+                                <ImageBrush ImageSource="pack://application:,,,/images/birthday_cake_512px_enter.png" x:Key="IMB_birthdayBEnter"/>
+                            </Button.Resources>
+                            <Button.Triggers>
+                                <EventTrigger RoutedEvent="Button.MouseEnter">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource IMB_birthdayBEnter}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="Button.MouseLeave">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource IMB_birthdayBDefault}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Button.Triggers>
+                            <Button.Background>
+                                <ImageBrush ImageSource="pack://application:,,,/images/birthday_cake_512px.png"/>
                             </Button.Background>
                         </Button>
                     </DockPanel>
@@ -404,6 +439,10 @@
                             <TextBlock Text="Дата народження:" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Right" Padding="0 0 20 0"></TextBlock>
                         </Grid>
                         <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
                             <DatePicker MaxWidth="150" VerticalAlignment="Center" HorizontalAlignment="Left" x:Name="dateBirthCa" SelectedDate="{Binding SelectedItem.DateOfBirth, ElementName=recordList,UpdateSourceTrigger=Default, FallbackValue={x:Static sys:DateTime.Now}}"  DisplayDateEnd="{Binding DateNow}" DisplayDateStart="1/1/1900" CalendarClosed="datePicker_ClosedCheck">
                                 <DatePicker.Resources>
                                     <Style TargetType="DatePickerTextBox">
@@ -411,6 +450,7 @@
                                     </Style>
                                 </DatePicker.Resources>
                             </DatePicker>
+                            <CheckBox IsChecked="{Binding SelectedItem.formTheGreeting, ElementName=recordList, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Content="Не пам'таю дату/Не формувати привітання" VerticalAlignment="Center" Margin="7 0 0 0"></CheckBox>
                         </Grid>
                     </Grid>
                 </Border>
@@ -453,7 +493,7 @@
                                     <TextBlock FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Right" Text="Країна:" Margin="0 0 10 0"/>
                                 </Grid>
                                 <Grid Grid.Column="1">
-                                    <ComboBox FontSize="18" VerticalContentAlignment="Center"  SelectedItem="{Binding SelectedItem.Country, ElementName=recordList, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Name="CBCountry" Width="200" MaxWidth="200" MaxHeight="30" HorizontalAlignment="Left" SelectionChanged="combBox_selectionChanged" GotFocus="comboBox_gorFocus" LostFocus="comboBox_lostFocus"/>
+                                    <ComboBox IsEditable="True" FontSize="18" VerticalContentAlignment="Center"  SelectedItem="{Binding SelectedItem.Country, ElementName=recordList, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Name="CBCountry" Width="200" MaxWidth="200" MaxHeight="30" HorizontalAlignment="Left" SelectionChanged="combBox_selectionChanged" GotFocus="comboBox_gorFocus" LostFocus="comboBox_lostFocus"/>
                                 </Grid>
                             </Grid>
                             <Grid Grid.Row="1">
