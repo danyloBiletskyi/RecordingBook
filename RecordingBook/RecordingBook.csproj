@@ -8,9 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="add_144px.png" />
-    <None Remove="Delete_480px.png" />
-    <None Remove="search_480px.png" />
+    <None Remove="images/add_144px.png" />
+    <None Remove="images/Delete_480px.png" />
+    <None Remove="images/search_480px.png" />
+    <None Remove="images\add_144px_enter.xcf" />
+    <None Remove="images\add_144px_enter_.png" />
+    <None Remove="images\Delete_480px_enter.png" />
+    <None Remove="images\save_144px.png" />
+    <None Remove="images\save_144px_enter.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,9 +24,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="add_144px.png" />
-    <Resource Include="Delete_480px.png" />
-    <Resource Include="search_480px.png" />
+    <Resource Include="images/add_144px.png" />
+    <Resource Include="images/Delete_480px.png" />
+    <Resource Include="images/search_480px.png" />
+    <Resource Include="images\add_144px_enter_.png" />
+    <Resource Include="images\Delete_480px_enter.png" />
+	<Resource Include="images\save_144px.png"/>
+	<Resource Include="images\save_144px_enter.png"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Save\" />
   </ItemGroup>
 
 </Project>
