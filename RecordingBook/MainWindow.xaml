@@ -1,13 +1,16 @@
-﻿<Window x:Class="RecordingBook.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:RecordingBook"
-        xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        mc:Ignorable="d"
-        Closing="Window_Closing"
-        Title="MainWindow" Height="768" Width="1366">
+﻿<Window
+    x:Class="RecordingBook.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:RecordingBook"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    Title="MainWindow"
+    Width="1366"
+    Height="768"
+    Closing="Window_Closing"
+    mc:Ignorable="d">
     <Window.Resources>
         <Style x:Key="SomeButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent" />
@@ -22,30 +25,30 @@
             </Setter>
         </Style>
         <Style x:Key="ListBoxNoHighLight" TargetType="ListBoxItem">
-            <Setter Property="Background" Value="#58C5F9"/>
+            <Setter Property="Background" Value="#58C5F9" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListBoxItem">
                         <Border Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#79c7ee"/>
+                    <Setter Property="Background" Value="#79c7ee" />
                 </Trigger>
                 <MultiTrigger>
                     <MultiTrigger.Conditions>
-                        <Condition Property="IsSelected" Value="True"/>
-                        <Condition Property="Selector.IsSelectionActive" Value="True"/>
+                        <Condition Property="IsSelected" Value="True" />
+                        <Condition Property="Selector.IsSelectionActive" Value="True" />
                     </MultiTrigger.Conditions>
-                    <Setter Property="Background" Value="#49B2EB"/>
+                    <Setter Property="Background" Value="#49B2EB" />
                 </MultiTrigger>
             </Style.Triggers>
         </Style>
-        <Style TargetType="TextBox" x:Key="ErrorTextBoxStyle">
+        <Style x:Key="ErrorTextBoxStyle" TargetType="TextBox">
             <Style.Triggers>
                 <Trigger Property="Validation.HasError" Value="True">
                     <Setter Property="BorderBrush" Value="Red" />
@@ -54,14 +57,22 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        <Style x:Key="EmptyListBox" TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+        <Style
+            x:Key="EmptyListBox"
+            BasedOn="{StaticResource {x:Type ListBox}}"
+            TargetType="ListBox">
             <Style.Triggers>
                 <Trigger Property="HasItems" Value="False">
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate>
-                                <Grid Background= "#e5f6fe" >
-                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25">Тут поки пусто</TextBlock>
+                                <Grid Background="#e5f6fe">
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        FontSize="25">
+                                        Тут поки пусто
+                                    </TextBlock>
                                 </Grid>
                             </ControlTemplate>
                         </Setter.Value>
@@ -73,43 +84,59 @@
 
 
     </Window.Resources>
-    <Grid Name="fullForm">
+    <Grid Name="FullForm">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MaxWidth="450px"/>
-            <ColumnDefinition/>
+            <ColumnDefinition MaxWidth="450px" />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <Border BorderThickness="0 0 0.5 0" BorderBrush="#363636">
+        <Border BorderBrush="#363636" BorderThickness="0,0,0.5,0">
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition MaxHeight="50px"/>
-                    <RowDefinition MaxHeight="40px"/>
-                    <RowDefinition/>
+                    <RowDefinition MaxHeight="50px" />
+                    <RowDefinition MaxHeight="40px" />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0" Background="#89d6fb">
 
-                    <Border Background="#d4f0fc"
+                    <Border
                         MaxHeight="40"
-                        Margin="5 0 5 0"
+                        Margin="5,0,5,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Background="#d4f0fc"
                         BorderBrush="#8DD8F6"
                         BorderThickness="2"
-                        VerticalAlignment="Center"
-                        CornerRadius="5" HorizontalAlignment="Center">
+                        CornerRadius="5">
 
-                        <DockPanel x:Name="St" Margin="5,2,5,2"
-                                Background="#d4f0fc" HorizontalAlignment="Right">
-                            <TextBox Background="#d4f0fc"
-                            Name="searchField"
-                            DockPanel.Dock="Left"
-                            MinWidth="300"
-                            MaxWidth="250"
-                            BorderThickness="0"
-                            Text="Search the record" 
-                            Margin="5 0 5 0"
-                            VerticalAlignment="Center"
-                            FontSize="20" HorizontalAlignment="Left" TextChanged="searchField_Changed"/>
-                            <Button Width="26.6px" HorizontalAlignment="Right" Name="searchButton" Margin="15 0 0 0" DockPanel.Dock="Right" BorderThickness="0" Click="searchButton_click">
+                        <DockPanel
+                            x:Name="DockPanel_Menu"
+                            Margin="5,2,5,2"
+                            HorizontalAlignment="Right"
+                            Background="#d4f0fc">
+                            <TextBox
+                                Name="SearchField"
+                                MinWidth="300"
+                                MaxWidth="250"
+                                Margin="5,0,5,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Background="#d4f0fc"
+                                BorderThickness="0"
+                                DockPanel.Dock="Left"
+                                FontSize="20"
+                                PreviewMouseLeftButtonDown="SelectAllText"
+                                Text="Search the record"
+                                TextChanged="SearchField_Changed" />
+                            <Button
+                                Name="SearchButton"
+                                Width="26.6px"
+                                Margin="15,0,0,0"
+                                HorizontalAlignment="Right"
+                                BorderThickness="0"
+                                Click="SearchButton_click"
+                                DockPanel.Dock="Right">
                                 <Button.Background>
-                                    <ImageBrush ImageSource="/images/search_480px.png"/>
+                                    <ImageBrush ImageSource="/images/search_480px.png" />
                                 </Button.Background>
                             </Button>
                         </DockPanel>
@@ -118,35 +145,49 @@
 
                 <Grid Grid.Row="1" Background="#B3E5FC">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0">
-                        <ComboBox x:Name="sortBy" SelectionChanged="sortBy_SelectionChanged" Background="#B3E5FC" MaxHeight="30" Width="120" HorizontalAlignment="Left" Margin="10 0 0 0">
+                        <ComboBox
+                            x:Name="SortingComboBox"
+                            Width="120"
+                            MaxHeight="30"
+                            Margin="10,0,0,0"
+                            HorizontalAlignment="Left"
+                            Background="#B3E5FC"
+                            SelectionChanged="SortCB_SelectionChanged">
                             <ComboBox.ItemContainerStyle>
                                 <Style TargetType="ComboBoxItem">
                                     <Setter Property="Background" Value="#B3E5FC" />
-                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="BorderThickness" Value="0" />
                                 </Style>
                             </ComboBox.ItemContainerStyle>
                             <ComboBoxItem Content="Ім'я від А-Я" />
-                            <ComboBoxItem Content="Ім'я від Я-А"/>
-                            <ComboBoxItem Content="Спочатку нові"/>
-                            <ComboBoxItem Content="Спочатку старі"/>
+                            <ComboBoxItem Content="Ім'я від Я-А" />
+                            <ComboBoxItem Content="Спочатку нові" />
+                            <ComboBoxItem Content="Спочатку старі" />
                         </ComboBox>
                     </Grid>
                     <DockPanel Grid.Column="1">
-                        <Button Name="delete_button" Width="40" Margin="0 0 7 0" DockPanel.Dock="Right" BorderThickness="0" Style="{StaticResource SomeButtonStyle}" Click="delete_button_Click">
+                        <Button
+                            Name="DeleteButton"
+                            Width="40"
+                            Margin="0,0,7,0"
+                            BorderThickness="0"
+                            Click="DeleteButton_Click"
+                            DockPanel.Dock="Right"
+                            Style="{StaticResource SomeButtonStyle}">
                             <Button.Resources>
-                                <ImageBrush ImageSource="pack://application:,,,/images/Delete_480px.png" x:Key="IMB_deleteBDefault"/>
-                                <ImageBrush ImageSource="pack://application:,,,/images/Delete_480px_enter.png" x:Key="IMB_deleteBEnter"/>
+                                <ImageBrush x:Key="IMB_deleteBDefault" ImageSource="pack://application:,,,/images/Delete_480px.png" />
+                                <ImageBrush x:Key="IMB_deleteBEnter" ImageSource="pack://application:,,,/images/Delete_480px_enter.png" />
                             </Button.Resources>
                             <Button.Triggers>
                                 <EventTrigger RoutedEvent="Button.MouseEnter">
                                     <BeginStoryboard>
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource IMB_deleteBEnter}"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource IMB_deleteBEnter}" />
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </BeginStoryboard>
@@ -155,27 +196,34 @@
                                     <BeginStoryboard>
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource IMB_deleteBDefault}"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource IMB_deleteBDefault}" />
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </EventTrigger>
                             </Button.Triggers>
                             <Button.Background>
-                                <ImageBrush ImageSource="pack://application:,,,/images/Delete_480px.png"/>
+                                <ImageBrush ImageSource="pack://application:,,,/images/Delete_480px.png" />
                             </Button.Background>
                         </Button>
-                        <Button  x:Name="add_button" Margin="7 0 7 0" Width="40" DockPanel.Dock="Right" BorderThickness="0" Style="{StaticResource SomeButtonStyle}" Click="add_button_Click">
+                        <Button
+                            x:Name="AddButton"
+                            Width="40"
+                            Margin="7,0,7,0"
+                            BorderThickness="0"
+                            Click="AddButton_Click"
+                            DockPanel.Dock="Right"
+                            Style="{StaticResource SomeButtonStyle}">
                             <Button.Resources>
-                                <ImageBrush ImageSource="pack://application:,,,/images/add_144px.png" x:Key="IMB_addBDefault"/>
-                                <ImageBrush ImageSource="pack://application:,,,/images/add_144px_enter_.png" x:Key="IMB_addBEnter"/>
+                                <ImageBrush x:Key="IMB_addBDefault" ImageSource="pack://application:,,,/images/add_144px.png" />
+                                <ImageBrush x:Key="IMB_addBEnter" ImageSource="pack://application:,,,/images/add_144px_enter_.png" />
                             </Button.Resources>
                             <Button.Triggers>
                                 <EventTrigger RoutedEvent="Button.MouseEnter">
                                     <BeginStoryboard>
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource IMB_addBEnter}"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource IMB_addBEnter}" />
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </BeginStoryboard>
@@ -184,27 +232,35 @@
                                     <BeginStoryboard>
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource IMB_addBDefault}"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource IMB_addBDefault}" />
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </EventTrigger>
                             </Button.Triggers>
                             <Button.Background>
-                                <ImageBrush ImageSource="pack://application:,,,/images/add_144px.png"/>
+                                <ImageBrush ImageSource="pack://application:,,,/images/add_144px.png" />
                             </Button.Background>
                         </Button>
-                        <Button DockPanel.Dock="Right" Margin="7 0 0 0" x:Name="SaveAllButton" Width="40" BorderThickness="0" FontSize="20" Style="{StaticResource SomeButtonStyle}" >
+                        <Button
+                            x:Name="SaveAllButton"
+                            Width="40"
+                            Margin="7,0,0,0"
+                            BorderThickness="0"
+                            Click="SaveAllButton_Click"
+                            DockPanel.Dock="Right"
+                            FontSize="20"
+                            Style="{StaticResource SomeButtonStyle}">
                             <Button.Resources>
-                                <ImageBrush ImageSource="pack://application:,,,/images/save_144px.png" x:Key="IMB_saveBDefault"/>
-                                <ImageBrush ImageSource="pack://application:,,,/images/save_144px_enter.png" x:Key="IMB_saveBEnter"/>
+                                <ImageBrush x:Key="IMB_saveBDefault" ImageSource="pack://application:,,,/images/save_144px.png" />
+                                <ImageBrush x:Key="IMB_saveBEnter" ImageSource="pack://application:,,,/images/save_144px_enter.png" />
                             </Button.Resources>
                             <Button.Triggers>
                                 <EventTrigger RoutedEvent="Button.MouseEnter">
                                     <BeginStoryboard>
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource IMB_saveBEnter}"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource IMB_saveBEnter}" />
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </BeginStoryboard>
@@ -213,27 +269,35 @@
                                     <BeginStoryboard>
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource IMB_saveBDefault}"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource IMB_saveBDefault}" />
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </EventTrigger>
                             </Button.Triggers>
                             <Button.Background>
-                                <ImageBrush ImageSource="pack://application:,,,/images/save_144px.png"/>
+                                <ImageBrush ImageSource="pack://application:,,,/images/save_144px.png" />
                             </Button.Background>
                         </Button>
-                        <Button HorizontalAlignment="Right" Margin="7 0 0 0" x:Name="birthdayGet" Width="40" BorderThickness="0" FontSize="20" Style="{StaticResource SomeButtonStyle}" Click="birthdayGet_Click" >
+                        <Button
+                            x:Name="BirthdayGet"
+                            Width="40"
+                            Margin="7,0,0,0"
+                            HorizontalAlignment="Right"
+                            BorderThickness="0"
+                            Click="BirthdayGet_Click"
+                            FontSize="20"
+                            Style="{StaticResource SomeButtonStyle}">
                             <Button.Resources>
-                                <ImageBrush ImageSource="pack://application:,,,/images/birthday_cake_512px.png" x:Key="IMB_birthdayBDefault"/>
-                                <ImageBrush ImageSource="pack://application:,,,/images/birthday_cake_512px_enter.png" x:Key="IMB_birthdayBEnter"/>
+                                <ImageBrush x:Key="IMB_birthdayBDefault" ImageSource="pack://application:,,,/images/birthday_cake_512px.png" />
+                                <ImageBrush x:Key="IMB_birthdayBEnter" ImageSource="pack://application:,,,/images/birthday_cake_512px_enter.png" />
                             </Button.Resources>
                             <Button.Triggers>
                                 <EventTrigger RoutedEvent="Button.MouseEnter">
                                     <BeginStoryboard>
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource IMB_birthdayBEnter}"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource IMB_birthdayBEnter}" />
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </BeginStoryboard>
@@ -242,89 +306,176 @@
                                     <BeginStoryboard>
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource IMB_birthdayBDefault}"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource IMB_birthdayBDefault}" />
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </EventTrigger>
                             </Button.Triggers>
                             <Button.Background>
-                                <ImageBrush ImageSource="pack://application:,,,/images/birthday_cake_512px.png"/>
+                                <ImageBrush ImageSource="pack://application:,,,/images/birthday_cake_512px.png" />
                             </Button.Background>
                         </Button>
                     </DockPanel>
                 </Grid>
-                <Grid Grid.Row="2" >
-                    <ListBox  Background="#E5F6FE" x:Name="recordList" Padding="-1" ItemsSource="{Binding Records, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource EmptyListBox}" SelectionChanged="recordList_SelectionChanged" >
+                <Grid Grid.Row="2">
+                    <ListBox
+                        x:Name="RecordList"
+                        Padding="-1"
+                        Background="#E5F6FE"
+                        ItemsSource="{Binding Records, UpdateSourceTrigger=PropertyChanged}"
+                        Loaded="RecordList_Loaded"
+                        SelectionChanged="RecordList_SelectionChanged"
+                        Style="{StaticResource EmptyListBox}">
                         <ListBox.ItemContainerStyle>
                             <Style BasedOn="{StaticResource ListBoxNoHighLight}" TargetType="ListBoxItem" />
                         </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Border BorderThickness="0 0 0 1" BorderBrush="Black" Width="450px" Margin="-6 -2 -2 0">
-                                    <Grid Height="100px" Width="Auto" HorizontalAlignment="Stretch">
+                                <Border
+                                    Width="430px"
+                                    Margin="-6,-2,-2,0"
+                                    BorderBrush="Black"
+                                    BorderThickness="0,0,0,1">
+
+                                    <Grid
+                                        Width="Auto"
+                                        Height="100px"
+                                        HorizontalAlignment="Stretch">
                                         <Grid.RowDefinitions>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
+                                            <RowDefinition />
+                                            <RowDefinition />
                                         </Grid.RowDefinitions>
-                                        <Grid Grid.Row="0" Margin="15 0 0 0" Height="30" MaxWidth="450px" HorizontalAlignment="Left" >
+                                        <Grid
+                                            Grid.Row="0"
+                                            Height="30"
+                                            MaxWidth="450px"
+                                            Margin="15,0,0,0"
+                                            HorizontalAlignment="Left">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="auto"/>
-                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
-                                            <Border  CornerRadius="10 0 0 10" BorderThickness="0" Background="#93d8f8" MaxHeight="29" Grid.Column="0">
+                                            <Border
+                                                Grid.Column="0"
+                                                MaxHeight="29"
+                                                Background="#93d8f8"
+                                                BorderThickness="0"
+                                                CornerRadius="10 0 0 10">
                                                 <Grid>
-                                                    <TextBlock FontSize="20" Foreground="Black" Padding="3 0 3 0">ПІБ:</TextBlock>
+                                                    <TextBlock
+                                                        Padding="3,0,3,0"
+                                                        FontSize="20"
+                                                        Foreground="Black">
+                                                        ПІБ:
+                                                    </TextBlock>
                                                 </Grid>
                                             </Border>
-                                            <Border  CornerRadius="0 10 10 0" BorderThickness="0" Grid.Column="1" Background="#dbf3ff" MaxHeight="29">
+                                            <Border
+                                                Grid.Column="1"
+                                                MaxHeight="29"
+                                                Background="#dbf3ff"
+                                                BorderThickness="0"
+                                                CornerRadius="0 10 10 0">
                                                 <Grid MaxHeight="28">
                                                     <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="auto"/>
-                                                        <ColumnDefinition Width="auto"/>
-                                                        <ColumnDefinition Width="auto"/>
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="auto" />
                                                     </Grid.ColumnDefinitions>
                                                     <Grid Grid.Column="0">
-                                                        <TextBlock Text="{Binding SecondName}" FontSize="20"  Margin="5 0 10 0"/>
+                                                        <TextBlock
+                                                            Margin="5,0,10,0"
+                                                            FontSize="20"
+                                                            Text="{Binding SecondName}" />
                                                     </Grid>
                                                     <Grid Grid.Column="1">
-                                                        <TextBlock Text="{Binding FirstName}" FontSize="20"  Margin="0 0 10 0"/>
+                                                        <TextBlock
+                                                            Margin="0,0,10,0"
+                                                            FontSize="20"
+                                                            Text="{Binding FirstName}" />
                                                     </Grid>
                                                     <Grid Grid.Column="2">
-                                                        <TextBlock Text="{Binding LastName}" FontSize="20"  Padding="0 0 10 0"/>
+                                                        <TextBlock
+                                                            Padding="0,0,10,0"
+                                                            FontSize="20"
+                                                            Text="{Binding LastName}" />
                                                     </Grid>
                                                 </Grid>
                                             </Border>
                                         </Grid>
                                         <Grid Grid.Row="1">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition MaxWidth="100"/>
-                                                <ColumnDefinition MaxWidth="350"/>
+                                                <ColumnDefinition MaxWidth="100" />
+                                                <ColumnDefinition MaxWidth="350" />
                                             </Grid.ColumnDefinitions>
-                                            <Border Grid.Column="0" CornerRadius="10" Margin="15 0 -15 0">
+                                            <Border
+                                                Grid.Column="0"
+                                                Margin="15,0,-15,0"
+                                                CornerRadius="10">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="auto"/>
-                                                        <ColumnDefinition Width="auto"/>
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="auto" />
                                                     </Grid.ColumnDefinitions>
-                                                    <Border  CornerRadius="10 0 0 10" BorderThickness="0" Background="#93d8f8" MaxHeight="29" Grid.Column="0">
-                                                        <TextBlock Grid.Column="0" Text="Вік: " FontSize="18" Padding="4 1 4 1" VerticalAlignment="Center"/>
+                                                    <Border
+                                                        Grid.Column="0"
+                                                        MaxHeight="29"
+                                                        Background="#93d8f8"
+                                                        BorderThickness="0"
+                                                        CornerRadius="10 0 0 10">
+                                                        <TextBlock
+                                                            Grid.Column="0"
+                                                            Padding="4,1,4,1"
+                                                            VerticalAlignment="Center"
+                                                            FontSize="18"
+                                                            Text="Вік: " />
                                                     </Border>
-                                                    <Border  CornerRadius="0 10 10 0" BorderThickness="0" Grid.Column="1" Background="#dbf3ff" MaxHeight="29">
-                                                        <TextBlock Grid.Column="1" Text="{Binding Age}" FontSize="18" Padding="4 1 5 1" VerticalAlignment="Center"/>
+                                                    <Border
+                                                        Grid.Column="1"
+                                                        MaxHeight="29"
+                                                        Background="#dbf3ff"
+                                                        BorderThickness="0"
+                                                        CornerRadius="0 10 10 0">
+                                                        <TextBlock
+                                                            Grid.Column="1"
+                                                            Padding="4,1,5,1"
+                                                            VerticalAlignment="Center"
+                                                            FontSize="18"
+                                                            Text="{Binding Age}" />
                                                     </Border>
                                                 </Grid>
                                             </Border>
-                                            <Grid Grid.Column="1" Margin="10 0 0 0">
+                                            <Grid Grid.Column="1" Margin="10,0,0,0">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="200"/>
+                                                    <ColumnDefinition Width="auto" />
+                                                    <ColumnDefinition Width="200" />
                                                 </Grid.ColumnDefinitions>
-                                                <Border  CornerRadius="10 0 0 10" BorderThickness="0" Background="#93d8f8" MaxHeight="29" Grid.Column="0">
-                                                    <TextBlock  Text="Номер Тел:" FontSize="18"  MaxHeight="28" Padding="4 1 4 1" VerticalAlignment="Center"/>
+                                                <Border
+                                                    Grid.Column="0"
+                                                    MaxHeight="29"
+                                                    Background="#93d8f8"
+                                                    BorderThickness="0"
+                                                    CornerRadius="10 0 0 10">
+                                                    <TextBlock
+                                                        MaxHeight="28"
+                                                        Padding="4,1,4,1"
+                                                        VerticalAlignment="Center"
+                                                        FontSize="18"
+                                                        Text="Номер Тел:" />
                                                 </Border>
-                                                <Border  CornerRadius="0 10 10 0" BorderThickness="0" Grid.Column="1" Background="#dbf3ff" MaxHeight="29">
-                                                    <TextBlock  Text="{Binding PhoneNumber}" FontSize="18" MaxHeight="28" Padding="4 1 1 1" VerticalAlignment="Center"/>
+                                                <Border
+                                                    Grid.Column="1"
+                                                    MaxHeight="29"
+                                                    Background="#dbf3ff"
+                                                    BorderThickness="0"
+                                                    CornerRadius="0 10 10 0">
+                                                    <TextBlock
+                                                        MaxHeight="28"
+                                                        Padding="4,1,1,1"
+                                                        VerticalAlignment="Center"
+                                                        FontSize="18"
+                                                        Text="{Binding PhoneNumber}" />
                                                 </Border>
                                             </Grid>
                                         </Grid>
@@ -337,229 +488,398 @@
                 </Grid>
             </Grid>
         </Border>
-        <TextBlock x:Name="TBNothingIs" Grid.Column="1" FontSize="40" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Поки нічого немає">
+        <TextBlock
+            x:Name="TBNothingIs"
+            Grid.Column="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="40"
+            Text="Поки нічого немає">
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
                     <Style.Triggers>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding HasItems, ElementName=recordList}" Value="True" />
-                                <Condition Binding="{Binding SelectedItem, ElementName=recordList}" Value="{x:Null}" />
+                                <Condition Binding="{Binding HasItems, ElementName=RecordList}" Value="True" />
+                                <Condition Binding="{Binding SelectedItem, ElementName=RecordList}" Value="{x:Null}" />
                             </MultiDataTrigger.Conditions>
                             <Setter Property="Visibility" Value="Hidden" />
                         </MultiDataTrigger>
-                        <DataTrigger Binding="{Binding SelectedItem, ElementName=recordList}" Value="{x:Null}">
+                        <DataTrigger Binding="{Binding SelectedItem, ElementName=RecordList}" Value="{x:Null}">
                             <Setter Property="Visibility" Value="Visible" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-        <Grid Grid.Column="1" x:Name="setBlock" Background="#edf9ff">
+        <Grid
+            x:Name="SetBlock"
+            Grid.Column="1"
+            Background="#edf9ff">
             <Grid.Style>
                 <Style TargetType="Grid">
                     <Style.Triggers>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding HasItems, ElementName=recordList}" Value="True" />
-                                <Condition Binding="{Binding SelectedItem, ElementName=recordList}" Value="{x:Null}" />
+                                <Condition Binding="{Binding HasItems, ElementName=RecordList}" Value="True" />
+                                <Condition Binding="{Binding SelectedItem, ElementName=RecordList}" Value="{x:Null}" />
                             </MultiDataTrigger.Conditions>
                             <Setter Property="Visibility" Value="Visible" />
                         </MultiDataTrigger>
-                        <DataTrigger Binding="{Binding SelectedItem, ElementName=recordList}" Value="{x:Null}">
+                        <DataTrigger Binding="{Binding SelectedItem, ElementName=RecordList}" Value="{x:Null}">
                             <Setter Property="Visibility" Value="Hidden" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </Grid.Style>
             <Grid.RowDefinitions>
-                <RowDefinition MaxHeight="200"/>
-                <RowDefinition MaxHeight="220"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition MaxHeight="200" />
+                <RowDefinition MaxHeight="220" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Grid Name="impInfo" Grid.Row="0">
+            <Grid Name="ImpInfo" Grid.Row="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="60"/>
-                    <RowDefinition Height="85"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="60" />
+                    <RowDefinition Height="85" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Головна інформація" FontSize="25"></TextBlock>
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="25"
+                        Text="Головна інформація" />
                 </Grid>
-                <Grid Grid.Row="1" Name="allNameBlock" Margin="20 20 20 0">
+                <Grid
+                    Name="AllNameBlock"
+                    Grid.Row="1"
+                    Margin="20,20,20,0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0" HorizontalAlignment="Left">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="190"/>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="190" />
                         </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0" Margin="2 0 0 0">
-                            <TextBlock Text="Прізвище*" FontSize="18" VerticalAlignment="Center"/>
+                        <Grid Grid.Column="0" Margin="2,0,0,0">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="18"
+                                Text="Прізвище*" />
                         </Grid>
-                        <Grid Grid.Column="1" Margin="2 0 0 0">
-                            <TextBox Name="secondName" Text="{Binding SelectedItem.SecondName, ElementName=recordList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" FontSize="20" Height="30" VerticalAlignment="Center" Style="{StaticResource ErrorTextBoxStyle}" MaxLength="22"></TextBox>
+                        <Grid Grid.Column="1" Margin="2,0,0,0">
+                            <TextBox
+                                Name="SecondName"
+                                Height="30"
+                                VerticalAlignment="Center"
+                                FontSize="20"
+                                MaxLength="22"
+                                PreviewMouseLeftButtonDown="SelectAllText"
+                                Style="{StaticResource ErrorTextBoxStyle}"
+                                Text="{Binding SelectedItem.SecondName, ElementName=RecordList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                                TextChanged="FSL_changed" />
                         </Grid>
                     </Grid>
                     <Grid Grid.Column="1" HorizontalAlignment="Center">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="190"/>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="190" />
                         </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0" Margin="2 0 0 0">
-                            <TextBlock Text="Ім'я*" FontSize="18" VerticalAlignment="Center"/>
+                        <Grid Grid.Column="0" Margin="2,0,0,0">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="18"
+                                Text="Ім'я*" />
                         </Grid>
-                        <Grid Grid.Column="1" Margin="2 0 0 0">
-                            <TextBox Name="firstName" Text="{Binding SelectedItem.FirstName, ElementName=recordList, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"  FontSize="20" Height="30" VerticalAlignment="Center" Style="{StaticResource ErrorTextBoxStyle}" MaxLength="22" />
+                        <Grid Grid.Column="1" Margin="2,0,0,0">
+                            <TextBox
+                                Name="FirstName"
+                                Height="30"
+                                VerticalAlignment="Center"
+                                FontSize="20"
+                                MaxLength="22"
+                                PreviewMouseLeftButtonDown="SelectAllText"
+                                Style="{StaticResource ErrorTextBoxStyle}"
+                                Text="{Binding SelectedItem.FirstName, ElementName=RecordList, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                                TextChanged="FSL_changed" />
                         </Grid>
                     </Grid>
                     <Grid Grid.Column="2" HorizontalAlignment="Right">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="190"/>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="190" />
                         </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0" Margin="2 0 0 0">
-                            <TextBlock Text="По батькові" FontSize="18" VerticalAlignment="Center"/>
+                        <Grid Grid.Column="0" Margin="2,0,0,0">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="18"
+                                Text="По батькові" />
                         </Grid>
-                        <Grid Grid.Column="1" Margin="2 0 0 0">
-                            <TextBox Name="lastName" Text="{Binding SelectedItem.LastName, ElementName=recordList, UpdateSourceTrigger=PropertyChanged}" FontSize="20" Height="30" VerticalAlignment="Center" MaxLength="22"></TextBox>
+                        <Grid Grid.Column="1" Margin="2,0,0,0">
+                            <TextBox
+                                Name="LastName"
+                                Height="30"
+                                VerticalAlignment="Center"
+                                FontSize="20"
+                                MaxLength="22"
+                                PreviewMouseLeftButtonDown="SelectAllText"
+                                Text="{Binding SelectedItem.LastName, ElementName=RecordList, UpdateSourceTrigger=PropertyChanged}"
+                                TextChanged="FSL_changed" />
                         </Grid>
                     </Grid>
                 </Grid>
-                <Border Grid.Row="2" BorderThickness="0 0 0 0.5" BorderBrush="#363636">
+                <Border
+                    Grid.Row="2"
+                    BorderBrush="#363636"
+                    BorderThickness="0,0,0,0.5">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0" Margin="20 0 0 0">
-                            <TextBlock Text="Дата народження:" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Right" Padding="0 0 20 0"></TextBlock>
+                        <Grid Grid.Column="0" Margin="20,0,0,0">
+                            <TextBlock
+                                Padding="0,0,20,0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                FontSize="20"
+                                Text="Дата народження:" />
                         </Grid>
                         <Grid Grid.Column="1">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition />
                             </Grid.ColumnDefinitions>
-                            <DatePicker MaxWidth="150" VerticalAlignment="Center" HorizontalAlignment="Left" x:Name="dateBirthCa" SelectedDate="{Binding SelectedItem.DateOfBirth, ElementName=recordList,UpdateSourceTrigger=Default, FallbackValue={x:Static sys:DateTime.Now}}"  DisplayDateEnd="{Binding DateNow}" DisplayDateStart="1/1/1900" CalendarClosed="datePicker_ClosedCheck">
+                            <DatePicker
+                                x:Name="dateBirthCa"
+                                MaxWidth="150"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                CalendarClosed="datePicker_ClosedCheck"
+                                DisplayDateEnd="{Binding DateNow}"
+                                DisplayDateStart="1/1/1900"
+                                SelectedDate="{Binding SelectedItem.DateOfBirth, ElementName=RecordList, UpdateSourceTrigger=Default, FallbackValue={x:Static sys:DateTime.Now}}">
                                 <DatePicker.Resources>
                                     <Style TargetType="DatePickerTextBox">
-                                        <Setter Property="IsReadOnly" Value="True"/>
+                                        <Setter Property="IsReadOnly" Value="True" />
                                     </Style>
                                 </DatePicker.Resources>
                             </DatePicker>
-                            <CheckBox IsChecked="{Binding SelectedItem.formTheGreeting, ElementName=recordList, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Content="Не пам'таю дату/Не формувати привітання" VerticalAlignment="Center" Margin="7 0 0 0"></CheckBox>
+                            <CheckBox
+                                Grid.Column="1"
+                                Margin="7,0,0,0"
+                                VerticalAlignment="Center"
+                                Content="Не пам'таю дату/Не формувати привітання"
+                                IsChecked="{Binding SelectedItem.FormTheGreeting, ElementName=RecordList, UpdateSourceTrigger=PropertyChanged}" />
                         </Grid>
                     </Grid>
                 </Border>
             </Grid>
             <Grid Name="contInfo" Grid.Row="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="60"/>
-                    <RowDefinition/>
+                    <RowDefinition Height="60" />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                    <TextBlock FontSize="24" Text="Контактні дані" VerticalAlignment="Center" HorizontalAlignment="Center" ></TextBlock>
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="24"
+                        Text="Контактні дані" />
                 </Grid>
-                <Border Grid.Row="1" BorderThickness="0 0 0 0.5" BorderBrush="#363636">
-                    <Grid Margin="0 0 0 10">
+                <Border
+                    Grid.Row="1"
+                    BorderBrush="#363636"
+                    BorderThickness="0,0,0,0.5">
+                    <Grid Margin="0,0,0,10">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="450"/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="450" />
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" Margin="0">
                             <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
                             </Grid.RowDefinitions>
-                            <TextBlock FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Text="Номер телефону" Padding="19 0 10 0"/>
-                            <TextBox Name="phoneNumber" Width="200" Height="auto" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Right"  Text="{Binding SelectedItem.PhoneNumber, ElementName=recordList, UpdateSourceTrigger=PropertyChanged}" SelectionStart="1" Margin="0 0 30 0" PreviewKeyDown="PNumberRestrict_PreviewKeyDown" TextChanged="phoneNumber_TextUpdated" MaxLength="20"></TextBox>
+                            <TextBlock
+                                Padding="19,0,10,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                FontSize="18"
+                                Text="Номер телефону" />
+                            <TextBox
+                                Name="phoneNumber"
+                                Width="200"
+                                Height="auto"
+                                Margin="0,0,30,0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                FontSize="20"
+                                MaxLength="20"
+                                PreviewKeyDown="PNumberRestrict_PreviewKeyDown"
+                                PreviewMouseLeftButtonDown="SelectAllText"
+                                SelectionStart="1"
+                                Text="{Binding SelectedItem.PhoneNumber, ElementName=RecordList, UpdateSourceTrigger=PropertyChanged}"
+                                TextChanged="phoneNumber_TextUpdated" />
                         </Grid>
-                        <Grid Grid.Column="1" Margin="0 0 30 0" HorizontalAlignment="Center">
+                        <Grid
+                            Grid.Column="1"
+                            Margin="0,0,30,0"
+                            HorizontalAlignment="Center">
                             <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
                             </Grid.RowDefinitions>
                             <Grid Grid.Row="0">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition MaxWidth="120"/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition MaxWidth="120" />
+                                    <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Grid Grid.Column="0">
-                                    <TextBlock FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Right" Text="Країна:" Margin="0 0 10 0"/>
+                                    <TextBlock
+                                        Margin="0,0,10,0"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        FontSize="18"
+                                        Text="Країна:" />
                                 </Grid>
                                 <Grid Grid.Column="1">
-                                    <ComboBox IsEditable="True" FontSize="18" VerticalContentAlignment="Center"  SelectedItem="{Binding SelectedItem.Country, ElementName=recordList, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Name="CBCountry" Width="200" MaxWidth="200" MaxHeight="30" HorizontalAlignment="Left" SelectionChanged="combBox_selectionChanged" GotFocus="comboBox_gorFocus" LostFocus="comboBox_lostFocus"/>
+                                    <ComboBox
+                                        Name="CBCountry"
+                                        Width="200"
+                                        MaxWidth="200"
+                                        MaxHeight="30"
+                                        HorizontalAlignment="Left"
+                                        VerticalContentAlignment="Center"
+                                        FontSize="18"
+                                        GotFocus="ComboBox_GotFocus"
+                                        IsEditable="True"
+                                        LostFocus="ComboBox_LostFocus"
+                                        SelectedItem="{Binding SelectedItem.Country, ElementName=RecordList, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                        SelectionChanged="CombBox_SelectionChanged" />
                                 </Grid>
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition MaxWidth="120"/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition MaxWidth="120" />
+                                    <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Grid Grid.Column="0">
-                                    <TextBlock FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Right" Text="Місто:" Margin=" 0 0 10 0"/>
+                                    <TextBlock
+                                        Margin="0,0,10,0"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        FontSize="18"
+                                        Text="Місто:" />
                                 </Grid>
                                 <Grid Grid.Column="1">
-                                    <TextBox Text="{Binding SelectedItem.City, ElementName=recordList, UpdateSourceTrigger=PropertyChanged}" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" Width="200" MaxWidth="200" MaxHeight="30"/>
+                                    <TextBox
+                                        Width="200"
+                                        MaxWidth="200"
+                                        MaxHeight="30"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        FontSize="20"
+                                        PreviewMouseLeftButtonDown="SelectAllText"
+                                        Text="{Binding SelectedItem.City, ElementName=RecordList, UpdateSourceTrigger=PropertyChanged}" />
                                 </Grid>
                             </Grid>
                             <Grid Grid.Row="2">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition MaxWidth="120"/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition MaxWidth="120" />
+                                    <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Grid Grid.Column="0">
-                                    <TextBlock FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Right" Text="Вулиця:" Margin="0 0 10 0"/>
+                                    <TextBlock
+                                        Margin="0,0,10,0"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        FontSize="18"
+                                        Text="Вулиця:" />
                                 </Grid>
                                 <Grid Grid.Column="1">
-                                    <TextBox Text="{Binding SelectedItem.StreetAndNumber, ElementName=recordList, UpdateSourceTrigger=PropertyChanged}" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" Width="200" MaxWidth="200" MaxHeight="30"/>
+                                    <TextBox
+                                        Width="200"
+                                        MaxWidth="200"
+                                        MaxHeight="30"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        FontSize="20"
+                                        PreviewMouseLeftButtonDown="SelectAllText"
+                                        Text="{Binding SelectedItem.StreetAndNumber, ElementName=RecordList, UpdateSourceTrigger=PropertyChanged}" />
                                 </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
                 </Border>
             </Grid>
-            <Grid Grid.Row="2" Name="additionalInf">
+            <Grid Name="AdditionalInf" Grid.Row="2">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="40"/>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition/>
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="50" />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Інше" FontSize="25"></TextBlock>
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="25"
+                        Text="Інше" />
                 </Grid>
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0">
-                        <TextBlock FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20 0 15 0" Text="Місце роботи/навчання:"></TextBlock>
+                        <TextBlock
+                            Margin="20,0,15,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="18"
+                            Text="Місце роботи/навчання:" />
                     </Grid>
                     <Grid Grid.Column="1">
-                        <TextBox Text="{Binding SelectedItem.PlaceOfWorkStudy, ElementName=recordList, UpdateSourceTrigger=PropertyChanged}" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" Width="300" MaxWidth="300" MaxHeight="30"></TextBox>
+                        <TextBox
+                            Width="300"
+                            MaxWidth="300"
+                            MaxHeight="30"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontSize="20"
+                            PreviewMouseLeftButtonDown="SelectAllText"
+                            Text="{Binding SelectedItem.PlaceOfWorkStudy, ElementName=RecordList, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
                 </Grid>
-                <Grid Grid.Row="2" Margin="0 15 0 0">
+                <Grid Grid.Row="2" Margin="0,15,0,0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0">
-                        <TextBlock FontSize="18" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="30 0 20 0" Text="Додаткова інформація:"></TextBlock>
+                        <TextBlock
+                            Margin="20,0,15,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            FontSize="18"
+                            Text="Додаткова інформація:" />
                     </Grid>
                     <Grid Grid.Column="1" Margin="20">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBox Text="{Binding SelectedItem.AdditionalInfo, ElementName=recordList, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" FontSize="20"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></TextBox>
-                        <Button Name="saveButton" Width="100" Height="40" FontSize="20" Content="Зберегти" Grid.Column="1" VerticalAlignment="Bottom" Margin="15 0 0 0" Click="saveButton_Click"/>
+                        <TextBox
+                            Grid.Column="0"
+                            Margin="-5,0,0,0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            FontSize="20"
+                            Text="{Binding SelectedItem.AdditionalInfo, ElementName=RecordList, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
                 </Grid>
             </Grid>

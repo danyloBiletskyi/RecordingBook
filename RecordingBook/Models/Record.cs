@@ -9,8 +9,15 @@ using System.Threading.Tasks;
 
 namespace RecordingBook.Models
 {
-    public class Record : INotifyDataErrorInfo
+    public class Record : INotifyDataErrorInfo  //Клас, що є реалізацією запису
+                                                //і має відповідні властивості.
     {
+        private readonly Dictionary<string, List<string>> _propertyErrors = new Dictionary<string, List<string>>();
+
+        private string firstName;
+        private string secondName;
+        private string lastName;
+
         public Record()
         {
             FirstName = "FirstName";
@@ -18,35 +25,25 @@ namespace RecordingBook.Models
             LastName = "LastName";
             Age = "age";
             PhoneNumber = "+(number)";
-            dateOfCreation= DateTime.Now;
-            formTheGreeting = false;
-            recordID = new Random().Next();
+            DateOfCreation= DateTime.Now;
+            FormTheGreeting = false;
         }
-        private readonly Dictionary<string, List<string>> _propertyErrors = new Dictionary<string, List<string>>();
 
-        private string _firstName;
-        private string _secondName;
-        private string _lastName;
-        private string _age;
-        private string _streetAndNumber;
-        private string _country;
-        private string _city;
-        private string _phoneNumber;
-        private string _placeOfWorkStudy;
-        private string _additionalInfo;
-        private DateTime _dateOfCreation;
+
         public string FirstName
         {
             get
             {
-                return _firstName;
+                return firstName;
             }
             set
             {
-                _firstName = value;
-                if (Regex.IsMatch(_firstName, "[^a-zA-Z-а-яА-ЯіІїЇєЄёЁ]"))// ДОРОБИТИ
+                firstName = value;
+                if (Regex.IsMatch(firstName, "[^a-zA-Z-а-яА-ЯіІїЇєЄёЁ]"))// ДОРОБИТИ
                 {
-                    AddError(nameof(FirstName), "Неправильно введене ім'я. Не має бути пробілів чи спеціальних символів, окрім '-'");
+                    AddError(nameof(FirstName), "Неправильно введене " +
+                        "ім'я. Не має бути пробілів чи спеціальних " +
+                        "символів та чисел, окрім '-'");
                 }
                 else
                 {
@@ -58,14 +55,16 @@ namespace RecordingBook.Models
         {
             get
             {
-                return _secondName;
+                return secondName;
             }
             set
             {
-                _secondName = value;
-                if (Regex.IsMatch(_secondName, "[^a-zA-Z-а-яА-ЯіІїЇєЄёЁ]"))// ДОРОБИТИ
+                secondName = value;
+                if (Regex.IsMatch(secondName, "[^a-zA-Z-а-яА-ЯіІїЇєЄёЁ]"))
                 {
-                    AddError(nameof(SecondName), "Неправильно введене прізвище. Не має бути пробілів чи спеціальних символів, окрім '-'");
+                    AddError(nameof(SecondName), "Неправильно введене " +
+                        "прізвище. Не має бути пробілів чи спеціальних " +
+                        "символів та чисел, окрім '-'");
                 }
                 else
                 {
@@ -77,14 +76,16 @@ namespace RecordingBook.Models
         {
             get
             {
-                return _lastName;
+                return lastName;
             }
             set
             {
-                _lastName = value;
-                if (Regex.IsMatch(_lastName, "[^a-zA-Z-а-яА-ЯіІїЇєЄёЁ]"))// ДОРОБИТИ
+                lastName = value;
+                if (Regex.IsMatch(lastName, "[^a-zA-Z-а-яА-ЯіІїЇєЄёЁ]"))
                 {
-                    AddError(nameof(LastName), "Неправильно введене по-батькові. Не має бути пробілів чи спеціальних символів, окрім '-'");
+                    AddError(nameof(LastName), "Неправильно введене " +
+                        "по-батькові. Не має бути пробілів чи спеціальних " +
+                        "символів та чисел, окрім '-'");
                 }
                 else
                 {
@@ -93,28 +94,41 @@ namespace RecordingBook.Models
             }
         }
         public string Age { get; set; }
-        public string StreetAndNumber { get; set; }
-        public string Country { get; set; }
-        public string City { get; set; }
+        public string StreetAndNumber { get; set; } = default!;
+        public string Country { get; set; } = default!;
+        public string City { get; set; } = default!;
         public string PhoneNumber { get; set; }
-        public string PlaceOfWorkStudy { get; set; }
-        public string AdditionalInfo { get; set; }
+        public string PlaceOfWorkStudy { get; set; } = default!;
+        public string AdditionalInfo { get; set; } = default!;
         public DateTime DateOfBirth { get; set; } = DateTime.Now;
-        public DateTime dateOfCreation { get; set; }
-        public int recordID { get; set; }
-        public bool formTheGreeting { get; set; }
-
-
-
+        public DateTime DateOfCreation { get; set; }
+        public bool FormTheGreeting { get; set; }
 
 
         public bool HasErrors => _propertyErrors.Any();
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+
+        public static int GetAge(DateTime? BirthDate)
+        {
+            if (BirthDate == null)
+            {
+                return 0;
+            }
+            DateTime notNull_BirthDate = (DateTime)BirthDate;
+            DateTime currentTime = DateTime.Now;
+            int age = currentTime.Year - notNull_BirthDate.Year;
+            if (notNull_BirthDate > currentTime.AddYears(-age))
+            {
+                age--;
+            }
+            return age;
+        }
 
 
         public IEnumerable GetErrors(string propertyName)
         {
-            if (string.IsNullOrEmpty(propertyName) || !_propertyErrors.ContainsKey(propertyName))
+            if (string.IsNullOrEmpty(propertyName) ||
+                !_propertyErrors.ContainsKey(propertyName))
                 return null;
 
             return _propertyErrors[propertyName];
@@ -131,6 +145,8 @@ namespace RecordingBook.Models
             _propertyErrors[propertyName].Add(errorMessage);
             OnErrorsChanged(propertyName);
         }
+
+
         public void ClearErrors(string propertyName)
         {
             if (_propertyErrors.ContainsKey(propertyName))
@@ -141,22 +157,13 @@ namespace RecordingBook.Models
         }
 
 
-
         private void OnErrorsChanged(string propertyName)
         {
-            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+            ErrorsChanged?.Invoke(this,
+                new DataErrorsChangedEventArgs(propertyName));
         }
 
 
-        public static int GetAge(DateTime? BirthDate)
-        {
-            if (BirthDate == null) return 0;
-            DateTime notNull_BirthDate = (DateTime)BirthDate;
-            int age = 0;
-            DateTime currentTime = DateTime.Now;
-            age = currentTime.Year - notNull_BirthDate.Year;
-            if (notNull_BirthDate > currentTime.AddYears(-age)) age--;
-            return age;
-        }
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
     }
 }

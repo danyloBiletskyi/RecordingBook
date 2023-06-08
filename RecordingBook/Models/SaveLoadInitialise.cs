@@ -8,145 +8,75 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace RecordingBook.Models
 {
-    public class SaveLoadInitialise
+    public class SaveLoadInitialise //Це клас створений для виконання
+                                    //таких завдань як Збереження та Завантаження даних.
     {
-        static string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Save\\Save.csv";
-        static FileInfo file = new FileInfo(path);
-        public static void SaveOne(Record record)
+        static string pathSL;
+        public static void Save(ObservableCollection<Record> records)
         {
-            Check_CreatePath();
-            RewriteComma(record);
-            SaveOne_Process(record);
+            GetSLFilePath();
+            StringBuilder jsonToSave = new StringBuilder();
 
-        }
-
-        public static void SaveAll(ObservableCollection<Record> records)
-        {
-            Check_CreatePath();
-            RewriteCommas(records);
-            WriteIntoCSV(records);
-        }
-
-
-        private static void Check_CreatePath()
-        {
-            if(!File.Exists(path))
+            for (int i = 0; i < records.Count; i++)
             {
-                File.Create(path);
+                var jsonString = System.Text.Json.JsonSerializer.Serialize(records[i]);
+
+                jsonToSave.Append(jsonString);
             }
+            File.WriteAllText(pathSL, jsonToSave.ToString());
         }
 
-
-        private static void RewriteCommas(ObservableCollection<Record> records)
+        public static void Load(ObservableCollection<Record> records)
         {
-            foreach (Record record in records)
+            GetSLFilePath();
+            string fileContent = File.ReadAllText(pathSL);
+            using (var stringReader = new StringReader(fileContent))
             {
-                RewriteComma(record);
-            }
-        }
-
-        private static void RewriteComma(Record record)
-        {
-            StringBuilder City = new StringBuilder(record.City).Replace(",", "*");
-            record.City = City.ToString();
-            StringBuilder StreenNumber = new StringBuilder(record.StreetAndNumber).Replace(",", "*");
-            record.StreetAndNumber = StreenNumber.ToString();
-            StringBuilder PlaceOfStudyWork = new StringBuilder(record.PlaceOfWorkStudy).Replace(",", "*");
-            record.PlaceOfWorkStudy = PlaceOfStudyWork.ToString();
-            StringBuilder AdditionalInfo = new StringBuilder(record.AdditionalInfo).Replace(",", "*");
-            record.AdditionalInfo = AdditionalInfo.ToString();
-        }
-
-        private static void RewriteCommasBack(ObservableCollection<Record> records)
-        {
-            foreach (Record record in records)
-            {
-                RewriteCommaBack(record);
-            }
-        }
-
-        private static void RewriteCommaBack(Record record)
-        {
-            StringBuilder City = new StringBuilder(record.City).Replace("*", ",");
-            record.City = City.ToString();
-            StringBuilder StreenNumber = new StringBuilder(record.StreetAndNumber).Replace("*", ",");
-            record.StreetAndNumber = StreenNumber.ToString();
-            StringBuilder PlaceOfStudyWork = new StringBuilder(record.PlaceOfWorkStudy).Replace("*", ",");
-            record.PlaceOfWorkStudy = PlaceOfStudyWork.ToString();
-            StringBuilder AdditionalInfo = new StringBuilder(record.AdditionalInfo).Replace("*", ",");
-            record.AdditionalInfo = AdditionalInfo.ToString();
-        }
-
-        private static void WriteIntoCSV(ObservableCollection<Record> records)
-        {
-            var csv = new StringBuilder();
-            foreach (Record record in records)
-            {
-                var toWrite = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13}", record.SecondName, record.FirstName, record.LastName,
-                    record.Age, record.StreetAndNumber, record.Country, record.City, record.PhoneNumber, record.PlaceOfWorkStudy, record.AdditionalInfo,
-                    record.DateOfBirth.ToShortDateString(), record.dateOfCreation.ToString(), record.recordID.ToString(), record.formTheGreeting.ToString()); 
-                csv.AppendLine(toWrite);
-            }
-
-            File.WriteAllText(path, csv.ToString());
-
-        }
-
-
-        public static void Load(ObservableCollection<Record> Records)
-        {
-            StreamReader reader = null;
-            List<string> recordInfo = new List<string>();
-            if(File.Exists(path))
-            {
-                reader = new StreamReader(File.OpenRead(path));
-
-                while(!reader.EndOfStream)
+                var jsReader = new JsonTextReader(stringReader)
                 {
-                    var line = reader.ReadLine();
-                    recordInfo = line.Split(',').ToList();
-                    Records.Add(new Record() { SecondName = recordInfo[0], FirstName = recordInfo[1], LastName = recordInfo[2], Age = recordInfo[3],
-                        StreetAndNumber = recordInfo[4], Country = recordInfo[5], City = recordInfo[6], PhoneNumber = recordInfo[7], PlaceOfWorkStudy = recordInfo[8],
-                        AdditionalInfo = recordInfo[9], DateOfBirth = DateTime.Parse(recordInfo[10]), dateOfCreation = DateTime.Parse(recordInfo[11]), recordID = int.Parse(recordInfo[12]),
-                    formTheGreeting = bool.Parse(recordInfo[13])});
+                    SupportMultipleContent = true
+                };
+
+                var jsonSerialiser = new Newtonsoft.Json.JsonSerializer();
+                while (jsReader.Read())
+                {
+                    Record? rec = jsonSerialiser.Deserialize<Record>(jsReader);
+                    records.Add(rec);
                 }
-                RewriteCommasBack(Records);
-                reader.Close();
             }
         }
 
-        private static void SaveOne_Process(Record record)
+
+        private static void GetSLFilePath()
         {
-            List<string> recordInfo = new List<string>();
-            StreamReader reader = new StreamReader(File.OpenRead(path));
-            if(file.Length > 0)
+            string currDir = Directory.GetCurrentDirectory();
+
+            if (currDir != null)
             {
-                while (!reader.EndOfStream)
+                DirectoryInfo? parrDir = Directory.GetParent(currDir);
+                if (parrDir != null)
                 {
-                    var line = reader.ReadLine();
-                    recordInfo = line.Split(',').ToList();
-                    if (record.recordID.ToString() != recordInfo[12])
+                    string? saveDir = parrDir.Parent?.Parent?.FullName;
+                    if (saveDir != null)
                     {
-                        line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13}", record.SecondName, record.FirstName, record.LastName,
-                            record.Age, record.StreetAndNumber, record.Country, record.City, record.PhoneNumber, record.PlaceOfWorkStudy, record.AdditionalInfo,
-                            record.DateOfBirth.ToShortDateString(), record.dateOfCreation.ToString(), record.recordID.ToString(), record.formTheGreeting.ToString());
+                        string path =  System.IO.Path.Combine(saveDir, "Save", 
+                            "Save.json");
+                        if (!File.Exists(path))
+                        {
+                            File.Create(path);
+                        }
+                        pathSL = path;
                     }
-                    recordInfo.Add(line);
                 }
             }
-            else
-            {
-                string line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13}", record.SecondName, record.FirstName, record.LastName,
-                            record.Age, record.StreetAndNumber, record.Country, record.City, record.PhoneNumber, record.PlaceOfWorkStudy, record.AdditionalInfo,
-                            record.DateOfBirth.ToShortDateString(), record.dateOfCreation.ToString(), record.recordID.ToString(), record.formTheGreeting.ToString());
-                recordInfo.Add(line);
-            }
-            reader.Close();
-            File.WriteAllLines(path, recordInfo);
+            return;
         }
+
     }
 
 }

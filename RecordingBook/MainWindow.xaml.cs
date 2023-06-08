@@ -1,177 +1,315 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Text.RegularExpressions;
-using System.IO;
-using CsvHelper;
-using System.Globalization;
 using RecordingBook.Models;
 using System.Collections.ObjectModel;
 using RecordingBook.Additional_ViewAndComfort;
-using System.Runtime.Intrinsics.Arm;
-using System.Reflection;
 
 namespace RecordingBook
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+    // Це головний клас в якому відбуватимуться виклики та ініціалізація дій, зроблених користувачем.
     public partial class MainWindow : Window
     {
-        private bool _isComboBoxChanged = false;
-        public DateTime DateNow { get; set; }
-        public Record CurrentRecord { get; set; }
-        public ObservableCollection<Record> Records { get; set; }
-        Dictionary<string,string> CountryNames = null;
+        private bool isComboBoxChanged = false;
+        private Dictionary<string, string>? countryNames = default!;
+
+
 
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
+
+
             Records = RecordManager.GetRecord();
 
             SaveLoadInitialise.Load(Records);
-            sortBy.SelectedIndex = 0;
-            DataContext = this;
-            CountryNames = DBCountryNames_Initialiser.GetCountryData();
-            List<string> CountryNames_list = CountryNames.Keys.ToList();
+            SortingComboBox.SelectedIndex = 0;
+
+            countryNames = DBCountryNames_Initialiser.GetCountryData();
+            if (countryNames == null)
+            {
+                return;
+            }
+            List<string> CountryNames_list = countryNames.Keys.ToList();
             CBCountry.ItemsSource = CountryNames_list;
 
         }
 
-        private void add_button_Click(object sender, RoutedEventArgs e)
+        public DateTime DateNow //Властивість, що передаватиметься у форму при створенні запису
+                                //задля встановлення кінцевої дати дня народження.
         {
-            Record newElem = new Record();
-            Records.Add(newElem);
+            get { return DateTime.Now; }
+            set { value = DateTime.Now; }
+        }
 
-            recordList.SelectedIndex = recordList.Items.Count - 1;
+        public ObservableCollection<Record> Records { get; set; }
+        private Record CurrentRecord { get; set; } = default!;
+
+
+        // Метод, для виклику пошуку при натисканні на кнопку пошуку.
+        private void SearchButton_click(object sender, RoutedEventArgs e)
+        {
+            RecordSearch.SearchRecord(RecordList, SearchField.Text);
         }
 
 
-        private void combBox_selectionChanged(object sender, SelectionChangedEventArgs e)
+        // Виклик оновлення даних, якщо змінилося значення поля пошуку.
+        private void SearchField_Changed(object sender, TextChangedEventArgs e)
         {
-            if(_isComboBoxChanged) { 
-                var selectedItem = CBCountry.SelectedItem;
+            RecordSearch.AutoRefresh(RecordList, SearchField.Text);
+        }
+
+
+        // Метод для створення запису.
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (CurrentRecord != null)
+            {
+                if (CurrentRecord.HasErrors)
+                {
+                    return;
+                }
+            }
+
+            Record newElem = new Record();
+            Records.Add(newElem);
+            RecordList.SelectedIndex = RecordList.Items.Count - 1;
+
+        }
+
+
+        // Ініціалізація збереження даних, при натисканні на кнопку.
+        private void SaveAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveLoadInitialise.Save(Records);
+        }
+
+
+        // Метод видалення запису при натисканні на кнопку.
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            Records.Remove(CurrentRecord);
+            RecordList.SelectedIndex = 0;
+            if (Records[0] != null)
+            {
+                CurrentRecord = Records[0];
+                ViewControl.CheckForErrorsAndMakeSelectionable(CurrentRecord,
+                RecordList);
+            }
+        }
+
+
+        // Метод, що виконує функцію формування привітання, якщо натиснута
+        // відповідна кнопка.
+        private void BirthdayGet_Click(object sender, RoutedEventArgs e)
+        {
+            CreateGreeting.whoHasABirthday(Records);
+        }
+
+
+        // Метод, що викликає певне сортування,
+        // якщо значення у полі вибору змінилося.
+        private void SortCB_SelectionChanged(object sender,
+            SelectionChangedEventArgs e)
+        {
+            ComboBoxItem? selItem = SortingComboBox.SelectedItem as ComboBoxItem;
+
+            if (selItem == null)
+            {
+                return;
+            }
+            string? selItemStr = selItem.Content.ToString();
+            var sRecords = RecordsSort.GetSortedRecord(selItemStr, Records);
+            Records.Clear();
+
+            foreach (var sortedRecord in sRecords)
+            {
+                Records.Add(sortedRecord);
+            }
+            RecordList.Items.Refresh();
+            RecordList.SelectedIndex = 0;
+        }
+
+
+        // Метод, що викликає перевірку та відповідні зміни,
+        // якщо є помилки в записі.
+        private void RecordList_Loaded(object sender, RoutedEventArgs e)
+        {
+            ViewControl.CheckForErrorsAndMakeSaveable(CurrentRecord,
+                SaveAllButton);
+            ViewControl.CheckForErrorsAndMakeSelectionable(CurrentRecord,
+                RecordList);
+        }
+
+
+        // Метод, що виконує певні дії при виборі користувачем якогось запису.
+        private void RecordList_SelectionChanged(object sender,
+            SelectionChangedEventArgs e)
+        {
+            ListBox? Lb = sender as ListBox;
+
+            if (Lb == null || Lb.SelectedItem == null)
+            {
+                return;
+            }
+
+            CurrentRecord = Lb.SelectedItem as Record;
+            if (CurrentRecord != null)
+            {
+                ViewControl.MakeVisible(SetBlock, TBNothingIs);
+                isComboBoxChanged = false;
+            }
+
+        }
+
+
+        // Метод, що викликає перевірку значень ПІБ, якщо вони змінилися.
+        private void FSL_changed(object sender, TextChangedEventArgs e)
+        {
+            RecordList_Loaded(RecordList, e);
+        }
+
+
+        // Метод, для виділення тексту при натисканні на відповідне поле.
+        private void SelectAllText(object sender, MouseButtonEventArgs e)
+        {
+            TextBox? tb = sender as TextBox;
+
+            if (tb == null)
+            {
+                return;
+            }
+            tb.Dispatcher.BeginInvoke(new Action(() =>      // Даний метод викликає подію у асинхронному режимі. Це через те, що при натисканні наш
+            //tb знаходиться у проміжному стані, що перешкоджає виконанню виділення всього тексту
+            {
+                if (tb.Name == phoneNumber.Name)
+                {
+                    tb.Focus();
+                    tb.SelectionStart = 1;
+                    tb.SelectionLength = tb.Text.Length - 1;
+                }
+                else
+                {
+                    tb.SelectAll();
+                }
+
+            }));
+        }
+
+
+        // Метод для ініціалізації реакції поля для номеру,
+        // на дії з полем вибору країни
+        private void CombBox_SelectionChanged(object sender, 
+            SelectionChangedEventArgs e)
+        {
+            if (isComboBoxChanged)
+            {
+
+                string selectedItem = (string) CBCountry.SelectedItem;
                 if (selectedItem != null)
                 {
-                    string selectedValue = selectedItem.ToString();
-                    phoneNumber.Text = phoneNumber.Text.ToString()[0] + CountryNames[selectedValue];
+                    if (countryNames == null)
+                    {
+                        return;
+                    }
+                    phoneNumber.Text = phoneNumber.Text.ToString()[0] + 
+                        countryNames[selectedItem];
                 }
             }
         }
 
-        private void searchButton_click(object sender, RoutedEventArgs e)
+
+
+        // Переривання не бажаних дій користувача, щодо поля номеру
+        private void PNumberRestrict_PreviewKeyDown(object sender, 
+            KeyEventArgs e)
         {
-            RecordSearch.SearchFunc(recordList, searchField.Text);
-        }
-
-
-
-
-        private void PNumberRestrict_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Back && phoneNumber.Text.Length == 1 && phoneNumber.Text[0] == '+')
+            if (e.Key == Key.Back && phoneNumber.Text.Length == 1 && 
+                phoneNumber.Text[0] == '+')
             {
                 e.Handled = true;
             }
-            if (!Char.IsDigit((char)KeyInterop.VirtualKeyFromKey(e.Key)) & e.Key != Key.Back | e.Key == Key.Space)
+            if (!Char.IsDigit((char)KeyInterop.VirtualKeyFromKey(e.Key)) & 
+                e.Key != Key.Back | e.Key == Key.Space)
             {
                 e.Handled = true;
             }
+            if (e.Key == Key.Left && phoneNumber.SelectionStart > 1)
+            {
+                phoneNumber.SelectionStart-= 1;
+            }
+            else if (e.Key == Key.Right && phoneNumber.Text.Length > 
+                phoneNumber.SelectionStart)
+            {
+                phoneNumber.SelectionStart += 1;
+            }
         }
 
-        private void phoneNumber_TextUpdated(object sender, TextChangedEventArgs e)
+
+        // Метод виклику перевірки введених користувачем даних
+        private void phoneNumber_TextUpdated(object sender, 
+            TextChangedEventArgs e)
         {
             ViewControl.PhoneNumberTBRule(phoneNumber);
         }
 
 
-        private void recordList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ListBox Lb = sender as ListBox;
-            CurrentRecord = Lb.SelectedItem as Record;
-            ViewControl.MakeVisible(setBlock, TBNothingIs);
-            _isComboBoxChanged = false;
-        }
 
-        private void searchField_Changed(object sender, TextChangedEventArgs e)
-        {
-            RecordSearch.AutoRefreshing(recordList, searchField.Text);
-        }
-
+        // Метод, що перевіряє чи введені дані в полі для вибору дати коректні.
+        // Викликає обчислення віку, якщо дані вірні
         private void datePicker_ClosedCheck(object sender, RoutedEventArgs e)
         {
-            DatePicker DP = sender as DatePicker;
-            if (DP.SelectedDate.HasValue && DP.SelectedDate.Value != DateTime.MinValue)
+            DatePicker? dP = sender as DatePicker;
+
+            if (dP == null)
             {
-                CurrentRecord.DateOfBirth = DP.SelectedDate.Value;
-                CurrentRecord.Age = Record.GetAge(DP.SelectedDate).ToString();
+                return;
+            }
+            if (dP.SelectedDate.HasValue && 
+                dP.SelectedDate.Value != DateTime.MinValue)
+            {
+                CurrentRecord.DateOfBirth = dP.SelectedDate.Value;
+                CurrentRecord.Age = Record.GetAge(dP.SelectedDate).ToString();
             }
             else
             {
-                DP.SelectedDate = DateTime.Now;
+                dP.SelectedDate = DateTime.Now;
             }
-            recordList.Items.Refresh();
+            RecordList.Items.Refresh();
         }
 
-        private void saveButton_Click(object sender, RoutedEventArgs e)
+
+
+
+        private void ComboBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            SaveLoadInitialise.SaveOne(CurrentRecord);
+            isComboBoxChanged = true;
         }
 
-        private void saveAllButton_Click(object sender, RoutedEventArgs e)
+
+        private void ComboBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            SaveLoadInitialise.SaveAll(Records);
+            isComboBoxChanged = false;
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            SaveLoadInitialise.SaveAll(Records);
-        }
 
-        private void comboBox_gorFocus(object sender, RoutedEventArgs e)
+        // Ініціалізація збереження даних, при закритті вікна.
+        private void Window_Closing(object sender,
+            System.ComponentModel.CancelEventArgs e)
         {
-            _isComboBoxChanged = true;
-        }
-
-        private void comboBox_lostFocus(object sender, RoutedEventArgs e)
-        {
-            _isComboBoxChanged = false;
-        }
-
-        private void delete_button_Click(object sender, RoutedEventArgs e)
-        {
-            Records.Remove(CurrentRecord);
-        }
-
-        private void sortBy_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBoxItem selectedItem = sortBy.SelectedItem as ComboBoxItem;
-            var sortedRecords = RecordsSort.GetSortedRecord(selectedItem.Content.ToString(), Records);
-            Records.Clear();
-
-            foreach(var sortedRecord in sortedRecords)
+            if (CurrentRecord.HasErrors)
             {
-                Records.Add(sortedRecord);
+                Records.Remove(CurrentRecord);
             }
-            recordList.Items.Refresh();
-            recordList.SelectedIndex= 0;
+            SaveLoadInitialise.Save(Records);
         }
 
-        private void birthdayGet_Click(object sender, RoutedEventArgs e)
-        {
-            CreateGreeting.whoHasGotABirthday(Records);
-        }
+
+
     }
 }
 

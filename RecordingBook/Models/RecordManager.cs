@@ -9,7 +9,8 @@ namespace RecordingBook.Models
 {
     public class RecordManager
     {
-        public static ObservableCollection<Record> RecordList { get; set; } = new ObservableCollection<Record>();
+        public static ObservableCollection<Record> RecordList { get; set; } =
+            new ObservableCollection<Record>();
 
         public static ObservableCollection<Record> GetRecord()
         {

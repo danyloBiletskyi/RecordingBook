@@ -7,47 +7,48 @@ using System.Threading.Tasks;
 
 namespace RecordingBook.Models
 {
-    public class RecordsSort
+    public class RecordsSort //Клас, створений для реалізації методів
+                             //сортування в різних порядках.
     {
 
-        public static ObservableCollection<Record> GetSortedRecord(string answer, ObservableCollection<Record> records)
+
+        // Основний метод, що повертає відсортовану колекцію записів.
+        public static ObservableCollection<Record> GetSortedRecord(string text,
+            ObservableCollection<Record> records)
         {
-            ObservableCollection<Record> recordsToReturn= new ObservableCollection<Record>();
-            if(answer != null)
+            ObservableCollection<Record> recsToRet= new ObservableCollection<Record>();
+
+            if (text != null)
             {
-                if(answer== "Ім'я від А-Я")
+                if (text== "Ім'я від А-Я")
                 {
-                    recordsToReturn = SortByNameUpDown(records);
+                    recsToRet = SortByNameUpDown(records);
                 }
-                else if (answer == "Ім'я від Я-А")
+                else if (text == "Ім'я від Я-А")
                 {
-                    recordsToReturn = SortByNameDownUp(records);
+                    recsToRet = SortByNameDownUp(records);
                 }
-                else if (answer == "Спочатку нові")
+                else if (text == "Спочатку нові")
                 {
-                    recordsToReturn = SortByDateNewFirst(records);
+                    recsToRet = SortByDateNewFirst(records);
                 }
                 else
                 {
-                    recordsToReturn = SortByDateNewLast(records);
+                    recsToRet = SortByDateNewLast(records);
                 }
             }
-            return recordsToReturn;
+            return recsToRet;
         }
 
-        private static ObservableCollection<Record> SortByNameUpDown(ObservableCollection<Record> records)
-        {
-            ObservableCollection<Record> sortedRecords = new ObservableCollection<Record>(records.OrderBy(record => record.SecondName));
-            if(sortedRecords != null)
-            {
-                records = sortedRecords;
-            }
-            return records;
-        }
 
-        private static ObservableCollection<Record> SortByNameDownUp(ObservableCollection<Record> records)
+        //Метод, що сортує записи за алфавітним порядком прізвища.
+        private static ObservableCollection<Record> SortByNameUpDown(
+            ObservableCollection<Record> records)
         {
-            ObservableCollection<Record> sortedRecords = new ObservableCollection<Record>(records.OrderByDescending(record => record.SecondName));
+            ObservableCollection<Record> sortedRecords = new 
+                ObservableCollection<Record>(records.OrderBy
+                (record => record.SecondName));
+
             if (sortedRecords != null)
             {
                 records = sortedRecords;
@@ -55,9 +56,15 @@ namespace RecordingBook.Models
             return records;
         }
 
-        private static ObservableCollection<Record> SortByDateNewLast(ObservableCollection<Record> records)
+
+        //Метод, що сортує записи у зворотньому алфавітному порядку прізвища.
+        private static ObservableCollection<Record> SortByNameDownUp(
+            ObservableCollection<Record> records)
         {
-            ObservableCollection<Record> sortedRecords = new ObservableCollection<Record>(records.OrderBy(record => record.dateOfCreation));
+            ObservableCollection<Record> sortedRecords = new 
+                ObservableCollection<Record>(records.OrderByDescending
+                (record => record.SecondName));
+
             if (sortedRecords != null)
             {
                 records = sortedRecords;
@@ -65,9 +72,31 @@ namespace RecordingBook.Models
             return records;
         }
 
-        private static ObservableCollection <Record> SortByDateNewFirst(ObservableCollection<Record> records)
+
+        //Метод, що сортує записи у такому порядку, що першими йдуть нові.
+        private static ObservableCollection<Record> SortByDateNewLast(
+            ObservableCollection<Record> records)
         {
-            ObservableCollection<Record> sortedRecords = new ObservableCollection<Record>(records.OrderByDescending(record => record.dateOfCreation));
+            ObservableCollection<Record> sortedRecords = new
+                ObservableCollection<Record>(records.OrderBy
+                (record => record.DateOfCreation));
+
+            if (sortedRecords != null)
+            {
+                records = sortedRecords;
+            }
+            return records;
+        }
+
+
+        //Метод, що сортує записи у такому порядку, що першими йдуть старі.
+        private static ObservableCollection <Record> SortByDateNewFirst(
+            ObservableCollection<Record> records)
+        {
+            ObservableCollection<Record> sortedRecords = new
+                ObservableCollection<Record>(records.OrderByDescending
+                (record => record.DateOfCreation));
+
             if (sortedRecords != null)
             {
                 records = sortedRecords;

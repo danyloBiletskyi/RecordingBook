@@ -7,32 +7,30 @@ using System.Threading.Tasks;
 
 namespace RecordingBook.Models
 {
-    public class CreateGreeting
+    public class CreateGreeting // Клас, призначений для реалізації методів
+                                //формування привітання.
     {
 
-        //private string greeting { get; set; } = "Дорога {1} {2} {3}, від щирого серця вітаю тебе з днем народження. Бажаю щастя, достатку та найголовніше" +
-        //    "здоров'я";
-        private Record selectedRecord;
-        public Record SelectedRecord
-        {
-            get { return selectedRecord; }
-            set
-            {
-                selectedRecord = value;
-            }
-        }
-        public static ObservableCollection<Record> whoHasBirthday { get; set; } = new ObservableCollection<Record>();
-        static greetingWindow windowForGreet;
+        static greetingWindow? windowForGreet;
 
-        public static void whoHasGotABirthday(ObservableCollection<Record> records)
+        public Record? SelectedRecord { get; set; }
+        public static ObservableCollection<Record> WhoHasBirthday { get; set; } =
+            new ObservableCollection<Record>();
+
+
+        // Метод що створює вікно для відображення дня народження та зображає
+        // там іменинників, якщо вони там є.
+        public static void whoHasABirthday(ObservableCollection<Record> records)
         {
             windowForGreet = new greetingWindow();
-            whoHasBirthday.Clear();
+            WhoHasBirthday.Clear();
             foreach (Record record in records)
             {
-                if(record.DateOfBirth == DateTime.Now.Date && record.formTheGreeting == false)
+                if (record.DateOfBirth.Month == DateTime.Now.Month &&
+                    record.DateOfBirth.Day== DateTime.Now.Day &&
+                    record.FormTheGreeting == false)
                 {
-                    whoHasBirthday.Add(record);
+                    WhoHasBirthday.Add(record);
                 }
             }
 

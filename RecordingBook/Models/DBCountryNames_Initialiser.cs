@@ -9,15 +9,16 @@ namespace RecordingBook.Models
 {
     public class DBCountryNames_Initialiser
     {
-        static string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+        static string path = GetPath();
 
-
-        public static Dictionary<string, string> GetCountryData()
+        // Метод для обробки та отримання даних, щодо країн
+        // та їх номерних кодів з .csv таблиці
+        public static Dictionary<string, string>? GetCountryData()
         {
-            path += "\\csvTables\\Country-codes.csv";
-            StreamReader reader = null;
+            StreamReader reader = default!;
+            Dictionary<string, string>? countries = new Dictionary<string,
+                string>();
 
-            Dictionary<string, string> countries = new Dictionary<string, string>();
             if (File.Exists(path))
             {
                 reader = new StreamReader(File.OpenRead(path));
@@ -25,6 +26,10 @@ namespace RecordingBook.Models
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
+                    if (line == null)
+                    {
+                        return null;
+                    }
                     var values = line.Split(',');
                     countries.Add(values[1], values[2]);
                 }
@@ -34,6 +39,27 @@ namespace RecordingBook.Models
             {
                 return null;
             }
+        }
+
+
+        private static string GetPath()
+        {
+            string currDir = Directory.GetCurrentDirectory();
+
+            if (currDir != null)
+            {
+                DirectoryInfo? parDir = Directory.GetParent(currDir);
+                if (parDir != null)
+                {
+                    string? tableDir = parDir.Parent?.Parent?.FullName;
+                    if (tableDir != null)
+                    {
+                        return Path.Combine(tableDir, "csvTables",
+                            "Country-codes.csv");
+                    }
+                }
+            }
+            return string.Empty;
         }
     }
 }

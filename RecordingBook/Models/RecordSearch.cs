@@ -7,41 +7,78 @@ using System.Windows.Controls;
 
 namespace RecordingBook.Models
 {
-    public static class RecordSearch
+    public static class RecordSearch // Клас, в якому відбувається реалізація
+                                     //методів пошуку за різними даними
     {
-        public static void SearchFunc(ListBox listBox, string searchText)
+        private static Dictionary<string, string> searchFor = new
+            Dictionary<string, string>();
+
+
+        // Метод, що оновлює записи при зміні текстового поля.
+        public static void AutoRefresh(ListBox listBox, string searchText)
         {
-            if (searchText == null) { return; }
-            else
+            if (searchText == "")
             {
-                searchText = searchText.ToLower();
-                Dictionary<string, string> SearchParameters = ParameterGetting(searchText);
-                if (SearchParameters == null) return;
-                bool containsSpecialCheck = searchText.Contains('@');
                 for (int i = 0; i < listBox.Items.Count; i++)
                 {
-                    ListBoxItem lbi = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromIndex(i);
-                    Record record_ofLBI = listBox.Items.GetItemAt(i) as Record;
+                    ListBoxItem lBI = new ListBoxItem();
+                    lBI = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromIndex(i);
+                    lBI.Visibility = System.Windows.Visibility.Visible;
+                }
+            }
+        }
+
+        
+        // Метод, що шукає записи за заданими значеннями
+        public static void SearchRecord(ListBox listBox, string searchText)
+        {
+            if (searchText == null) 
+            { 
+                return;
+            }
+            else
+            {
+                searchFor.Clear();
+                searchText = searchText.ToLower();
+                if (CheckAndGetParameters(searchText) == false)
+                {
+                    return;
+                }
+
+                bool containsSpecialCheck = searchText.Contains('@');
+
+                for (int i = 0; i < listBox.Items.Count; i++)
+                {
+                    ListBoxItem lBI = new ListBoxItem();
+                    lBI = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromIndex(i);
+                    Record? recordOfLBI = listBox.Items.GetItemAt(i) as Record;
+
+                    if (recordOfLBI == null)
+                    {
+                        return;
+                    }
                     if (containsSpecialCheck)
                     {
-                        if (DataChecking(SearchParameters, record_ofLBI))
+                        if (CheckData(searchFor, recordOfLBI))
                         {
-                            lbi.Visibility = System.Windows.Visibility.Visible;
+                            lBI.Visibility = System.Windows.Visibility.Visible;
                         }
                         else
                         {
-                            lbi.Visibility = System.Windows.Visibility.Collapsed;
+                            lBI.Visibility = System.Windows.Visibility.Collapsed;
                         }
                     }
                     else if (!containsSpecialCheck)
                     {
-                        if (record_ofLBI.FirstName.ToLower().Contains(searchText) || record_ofLBI.SecondName.ToLower().Contains(searchText) || record_ofLBI.LastName.ToLower().Contains(searchText))
+                        if (recordOfLBI.FirstName.ToLower().Contains(searchText) ||
+                            recordOfLBI.SecondName.ToLower().Contains(searchText) ||
+                            recordOfLBI.LastName.ToLower().Contains(searchText))
                         {
-                            lbi.Visibility = System.Windows.Visibility.Visible;
+                            lBI.Visibility = System.Windows.Visibility.Visible;
                         }
                         else
                         {
-                            lbi.Visibility = System.Windows.Visibility.Collapsed;
+                            lBI.Visibility = System.Windows.Visibility.Collapsed;
                         }
                     }
 
@@ -49,93 +86,108 @@ namespace RecordingBook.Models
             }
 
         }
-        private static Dictionary<string, string> ParameterGetting(string searchText)
-        {
-            Dictionary<string, string> finalParameters = new Dictionary<string, string>();
-            int countOfParameters = searchText.Count(s => s == '@');
-            StringBuilder newST = new StringBuilder(searchText);
-            newST.Replace(" ", "");
 
-            List<string> ST_searchParams = newST.ToString().Split('@').ToList();
-            ST_searchParams.RemoveAt(0);
-            for(int i = 0; i < ST_searchParams.Count; i++)
-            {
-                string[] currentValueKey = ST_searchParams[i].Split(':');
-                finalParameters.Add(currentValueKey[0].ToLower(), currentValueKey[1].ToLower());
-            }
-            if (!ParameterChecking(finalParameters))
-            {
-                return null;
-            }
-            return finalParameters;
-        }
-
-        private static bool ParameterChecking(Dictionary<string, string> finalParameters)
+        // Метод, що перевіряє чи задані параметри вірні.
+        // Також в процесі змінює поле, якщо все вірно.
+        private static bool CheckAndGetParameters(string searchText)
         {
-            int CountOfKeyValues = finalParameters.Count;
-            string[] correctKeys = {"ім'я", "ім`я", "прізвище", "побатькові", "вік", "країна", "місто" };
-            foreach (string key in correctKeys)
+            if (searchText.Count(s => s == '@') > 0)
             {
-                if (finalParameters.ContainsKey(key))
+                List<string> searchTextList = searchText.Split('@').ToList();
+
+                if (searchTextList.Count < 1)
                 {
-                    CountOfKeyValues--;
+                    return false;
                 }
+                foreach (string s in searchTextList)
+                {
+                    if (s == "")
+                    {
+                        continue;
+                    }
+                    if (s[0] == ':' || s.Contains(':') == false)
+                    {
+                        return false;
+                    }
+                    List<string> innerList = s.Split(':').ToList();
+
+                    if (innerList.Count < 2)
+                    {
+                        continue;
+                    }
+                    searchFor.Add(innerList[0].Trim().ToLower(),
+                        innerList[1].Trim().ToLower());
+
+                }
+
             }
-            if (CountOfKeyValues == 0) return true; else return false;
+            return true;
+
         }
 
-        private static bool DataChecking(Dictionary<string, string> finalParameters, Record currentRecord)
+        
+        // Метод, що звіряє уведені користувачем "ключі" для пошуку
+        // з реалізованими нижче.
+        private static bool CheckData(Dictionary<string, string> finalParameters,
+            Record currentRecord)
         {
             int isExist = finalParameters.Count;
-            foreach(string key in finalParameters.Keys)
+            foreach (string key in finalParameters.Keys)
             {
                 switch (key)
                 {
                     case "ім'я":
-                        if(currentRecord.FirstName.ToLower() == finalParameters[key].ToLower())
+                        if (currentRecord.FirstName.ToLower().Contains(
+                            finalParameters[key]))
                         {
                             isExist--;
                         }
                         break;
                     case "ім`я":
-                        if (currentRecord.FirstName.ToLower() == finalParameters[key].ToLower())
+                        if (currentRecord.FirstName.ToLower().Contains(
+                            finalParameters[key]))
                         {
                             isExist--;
                         }
                         break;
                     case "прізвище":
-                        if (currentRecord.SecondName.ToLower() == finalParameters[key].ToLower())
+                        if (currentRecord.SecondName.ToLower().Contains(
+                            finalParameters[key]))
                         {
                             isExist--;
                         }
                         break;
                     case "побатькові":
-                        if (currentRecord.LastName.ToLower() == finalParameters[key].ToLower())
+                        if (currentRecord.LastName.ToLower().Contains(
+                            finalParameters[key]))
                         {
                             isExist--;
                         }
                         break;
                     case "вік":
-                        if (currentRecord.Age.ToLower() == finalParameters[key].ToLower())
+                        if (currentRecord.Age.ToLower().Contains(
+                            finalParameters[key].ToLower()))
                         {
                             isExist--;
                         }
                         break;
                     case "країна":
-                        if (currentRecord.Country.ToLower() == finalParameters[key].ToLower())
+                        if (currentRecord.Country.ToLower().Contains(
+                            finalParameters[key]))
                         {
                             isExist--;
                         }
                         break;
                     case "місто":
-                        if (currentRecord.City.ToLower() == finalParameters[key].ToLower())
+                        if (currentRecord.City.ToLower().Contains(
+                            finalParameters[key]))
                         {
                             isExist--;
                         }
                         break;
                 }
             }
-            if(isExist == 0)
+            if (isExist == 0)
             {
                 return true;
             }
@@ -143,16 +195,6 @@ namespace RecordingBook.Models
         }
 
 
-        public static void AutoRefreshing (ListBox listBox, string searchText)
-        {
-            if(searchText == "")
-            {
-                for(int i = 0; i < listBox.Items.Count; i++)
-                {
-                    ListBoxItem lb =(ListBoxItem) listBox.ItemContainerGenerator.ContainerFromIndex(i);
-                    lb.Visibility = System.Windows.Visibility.Visible;
-                }
-            }
-        }
+
     }
 }
