@@ -187,49 +187,49 @@ namespace RecordingBook.Models
                 switch (key)
                 {
                     case "ім'я":
-                        if (currentRecord.FirstName.ToLower().Contains(
+                        if (currentRecord.FirstName != null && currentRecord.FirstName.ToLower().Contains(
                             finalParameters[key]))
                         {
                             isExist--;
                         }
                         break;
                     case "ім`я":
-                        if (currentRecord.FirstName.ToLower().Contains(
+                        if (currentRecord.FirstName != null && currentRecord.FirstName.ToLower().Contains(
                             finalParameters[key]))
                         {
                             isExist--;
                         }
                         break;
                     case "прізвище":
-                        if (currentRecord.SecondName.ToLower().Contains(
+                        if (currentRecord.SecondName != null && currentRecord.SecondName.ToLower().Contains(
                             finalParameters[key]))
                         {
                             isExist--;
                         }
                         break;
                     case "побатькові":
-                        if (currentRecord.LastName.ToLower().Contains(
+                        if (currentRecord.LastName != null && currentRecord.LastName.ToLower().Contains(
                             finalParameters[key]))
                         {
                             isExist--;
                         }
                         break;
                     case "вік":
-                        if (currentRecord.Age.ToLower().Contains(
+                        if (currentRecord.Age != null && currentRecord.Age.ToLower().Contains(
                             finalParameters[key].ToLower()))
                         {
                             isExist--;
                         }
                         break;
                     case "країна":
-                        if (currentRecord.Country.ToLower().Contains(
+                        if (currentRecord.Country != null && currentRecord.Country.ToLower().Contains(
                             finalParameters[key]))
                         {
                             isExist--;
                         }
                         break;
                     case "місто":
-                        if (currentRecord.City.ToLower().Contains(
+                        if (currentRecord.City!= null && currentRecord.City.ToLower().Contains(
                             finalParameters[key]))
                         {
                             isExist--;
