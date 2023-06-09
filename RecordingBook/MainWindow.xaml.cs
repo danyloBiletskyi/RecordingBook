@@ -64,18 +64,7 @@ namespace RecordingBook
             RecordSearch.AutoRefresh(RecordList, SearchField.Text);
         }
 
-        private void ItemContainerGenerator_StatusChanged(object sender, EventArgs e, int targetIndex)
-        {
-            if (RecordList.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
-            {
-                ListBoxItem listBoxItem = (ListBoxItem)RecordList.ItemContainerGenerator.ContainerFromIndex(targetIndex);
-                if (listBoxItem != null)
-                {
-                    // Виконайте потрібні дії з listBoxItem
-                    // ...
-                }
-            }
-        }
+
         // Метод для створення запису.
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
@@ -111,8 +100,6 @@ namespace RecordingBook
                 if (Records.Count > 1)
                 {
                     CurrentRecord = Records[0];
-                    ViewControl.CheckForErrorsAndMakeSelectionable(CurrentRecord,
-                    RecordList);
                 }
             }
             if(Records.Count == 0)
@@ -157,13 +144,6 @@ namespace RecordingBook
 
         // Метод, що викликає перевірку та відповідні зміни,
         // якщо є помилки в записі.
-        private void RecordList_Loaded(object sender, RoutedEventArgs e)
-        {
-            ViewControl.CheckForErrorsAndMakeSaveable(CurrentRecord,
-                SaveAllButton);
-            ViewControl.CheckForErrorsAndMakeSelectionable(CurrentRecord,
-                RecordList);
-        }
 
 
         // Метод, що виконує певні дії при виборі користувачем якогось запису.
@@ -188,10 +168,6 @@ namespace RecordingBook
 
 
         // Метод, що викликає перевірку значень ПІБ, якщо вони змінилися.
-        private void FSL_changed(object sender, TextChangedEventArgs e)
-        {
-            RecordList_Loaded(RecordList, e);
-        }
 
 
         // Метод, для виділення тексту при натисканні на відповідне поле.

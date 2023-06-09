@@ -350,7 +350,6 @@
                         Padding="-1"
                         Background="#E5F6FE"
                         ItemsSource="{Binding Records, UpdateSourceTrigger=PropertyChanged}"
-                        Loaded="RecordList_Loaded"
                         SelectionChanged="RecordList_SelectionChanged"
                         Style="{StaticResource EmptyListBox}">
                         <ListBox.ItemContainerStyle>
@@ -607,8 +606,7 @@
                                 MaxLength="22"
                                 PreviewMouseLeftButtonDown="SelectAllText"
                                 Style="{StaticResource ErrorTextBoxStyle}"
-                                Text="{Binding SelectedItem.SecondName, ElementName=RecordList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                                TextChanged="FSL_changed" />
+                                Text="{Binding SelectedItem.SecondName, ElementName=RecordList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
                         </Grid>
                     </Grid>
                     <Grid Grid.Column="1" HorizontalAlignment="Center">
@@ -631,8 +629,7 @@
                                 MaxLength="22"
                                 PreviewMouseLeftButtonDown="SelectAllText"
                                 Style="{StaticResource ErrorTextBoxStyle}"
-                                Text="{Binding SelectedItem.FirstName, ElementName=RecordList, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                                TextChanged="FSL_changed" />
+                                Text="{Binding SelectedItem.FirstName, ElementName=RecordList, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
                         </Grid>
                     </Grid>
                     <Grid Grid.Column="2" HorizontalAlignment="Right">
@@ -654,8 +651,7 @@
                                 FontSize="20"
                                 MaxLength="22"
                                 PreviewMouseLeftButtonDown="SelectAllText"
-                                Text="{Binding SelectedItem.LastName, ElementName=RecordList, UpdateSourceTrigger=PropertyChanged}"
-                                TextChanged="FSL_changed" />
+                                Text="{Binding SelectedItem.LastName, ElementName=RecordList, UpdateSourceTrigger=PropertyChanged}"/>
                         </Grid>
                     </Grid>
                 </Grid>
