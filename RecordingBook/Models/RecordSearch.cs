@@ -52,7 +52,15 @@ namespace RecordingBook.Models
                     for (int i = 0; i < listBox.Items.Count; i++)
                     {
                         var lBI = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromIndex(i);
-                        Record? recordOfLBI = listBox.Items.GetItemAt(i) as Record;
+
+
+                        if (lBI == null)
+                        {
+                            continue;
+                        }
+
+                        Record? recordOfLBI = lBI.Content as Record;
+
 
                         if (recordOfLBI == null)
                         {
@@ -75,10 +83,19 @@ namespace RecordingBook.Models
                     string[] arrayOfCriteria = searchText.Split(' ').ToArray();
                     if (arrayOfCriteria.Length>1)
                     {
-                        for(int i = 0; i < listBox.Items.Count; i++)
+                        for (int i = 0; i < listBox.Items.Count; i++)
                         {
                             var lBI = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromIndex(i);
-                            Record? recordOfLBI = listBox.Items.GetItemAt(i) as Record;
+
+
+                            if (lBI == null)
+                            {
+                                continue;
+                            }
+
+                            Record? recordOfLBI = lBI.Content as Record;
+
+
                             if (recordOfLBI == null)
                             {
                                 continue;
@@ -114,7 +131,17 @@ namespace RecordingBook.Models
                         for (int i = 0; i < listBox.Items.Count; i++)
                         {
                             var lBI = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromIndex(i);
-                            Record? recordOfLBI = listBox.Items.GetItemAt(i) as Record;
+
+
+                            if (lBI == null)
+                            {
+                                continue;
+                            }
+
+
+                            Record? recordOfLBI = lBI.Content as Record;
+
+
                             if (recordOfLBI == null)
                             {
                                 continue;
