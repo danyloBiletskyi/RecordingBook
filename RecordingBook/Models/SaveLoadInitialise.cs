@@ -13,41 +13,27 @@ using Newtonsoft.Json;
 
 namespace RecordingBook.Models
 {
-    public class SaveLoadInitialise //Це клас створений для виконання
+    public static class SaveLoadInitialise //Це клас створений для виконання
                                     //таких завдань як Збереження та Завантаження даних.
     {
         static string pathSL;
         public static void Save(ObservableCollection<Record> records)
         {
             GetSLFilePath();
-            StringBuilder jsonToSave = new StringBuilder();
-
-            for (int i = 0; i < records.Count; i++)
-            {
-                var jsonString = System.Text.Json.JsonSerializer.Serialize(records[i]);
-
-                jsonToSave.Append(jsonString);
-            }
-            File.WriteAllText(pathSL, jsonToSave.ToString());
+            string jsonString = JsonConvert.SerializeObject(records);
+            File.WriteAllText(pathSL, jsonString);
         }
 
         public static void Load(ObservableCollection<Record> records)
         {
             GetSLFilePath();
             string fileContent = File.ReadAllText(pathSL);
-            using (var stringReader = new StringReader(fileContent))
-            {
-                var jsReader = new JsonTextReader(stringReader)
-                {
-                    SupportMultipleContent = true
-                };
+            var deserializedRecords = JsonConvert.DeserializeObject<ObservableCollection<Record>>(fileContent);
+            records.Clear();
 
-                var jsonSerialiser = new Newtonsoft.Json.JsonSerializer();
-                while (jsReader.Read())
-                {
-                    Record? rec = jsonSerialiser.Deserialize<Record>(jsReader);
-                    records.Add(rec);
-                }
+            foreach (var record in deserializedRecords)
+            {
+                records.Add(record);
             }
         }
 

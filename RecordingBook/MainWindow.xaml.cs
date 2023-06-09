@@ -7,6 +7,7 @@ using System.Windows.Input;
 using RecordingBook.Models;
 using System.Collections.ObjectModel;
 using RecordingBook.Additional_ViewAndComfort;
+using System.Windows.Controls.Primitives;
 
 namespace RecordingBook
 {
@@ -63,7 +64,18 @@ namespace RecordingBook
             RecordSearch.AutoRefresh(RecordList, SearchField.Text);
         }
 
-
+        private void ItemContainerGenerator_StatusChanged(object sender, EventArgs e, int targetIndex)
+        {
+            if (RecordList.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
+            {
+                ListBoxItem listBoxItem = (ListBoxItem)RecordList.ItemContainerGenerator.ContainerFromIndex(targetIndex);
+                if (listBoxItem != null)
+                {
+                    // Виконайте потрібні дії з listBoxItem
+                    // ...
+                }
+            }
+        }
         // Метод для створення запису.
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
@@ -92,14 +104,22 @@ namespace RecordingBook
         // Метод видалення запису при натисканні на кнопку.
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            Records.Remove(CurrentRecord);
-            RecordList.SelectedIndex = 0;
-            if (Records[0] != null)
+            if (Records.Count > 0)
             {
-                CurrentRecord = Records[0];
-                ViewControl.CheckForErrorsAndMakeSelectionable(CurrentRecord,
-                RecordList);
+                Records.Remove(CurrentRecord);
+                RecordList.SelectedIndex = 0;
+                if (Records.Count > 1)
+                {
+                    CurrentRecord = Records[0];
+                    ViewControl.CheckForErrorsAndMakeSelectionable(CurrentRecord,
+                    RecordList);
+                }
             }
+            if(Records.Count == 0)
+            {
+                ViewControl.MakeHidden(SetBlock, TBNothingIs);
+            }
+
         }
 
 
@@ -301,10 +321,14 @@ namespace RecordingBook
         private void Window_Closing(object sender,
             System.ComponentModel.CancelEventArgs e)
         {
-            if (CurrentRecord.HasErrors)
+            if(CurrentRecord!= null)
             {
-                Records.Remove(CurrentRecord);
+                if (CurrentRecord.HasErrors)
+                {
+                    Records.Remove(CurrentRecord);
+                }
             }
+
             SaveLoadInitialise.Save(Records);
         }
 

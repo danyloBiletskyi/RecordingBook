@@ -15,15 +15,17 @@ namespace RecordingBook.Models
 
 
         // Метод, що оновлює записи при зміні текстового поля.
-        public static void AutoRefresh(ListBox listBox, string searchText)
+        public static void AutoRefresh(ListBox listBox, string searchText = "")
         {
             if (searchText == "")
             {
                 for (int i = 0; i < listBox.Items.Count; i++)
                 {
-                    ListBoxItem lBI = new ListBoxItem();
-                    lBI = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromIndex(i);
-                    lBI.Visibility = System.Windows.Visibility.Visible;
+                    var lBI = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromIndex(i);
+                    if (lBI != null)
+                    {
+                        lBI.Visibility = System.Windows.Visibility.Visible;
+                    }
                 }
             }
         }
@@ -46,19 +48,16 @@ namespace RecordingBook.Models
                 }
 
                 bool containsSpecialCheck = searchText.Contains('@');
-
-                for (int i = 0; i < listBox.Items.Count; i++)
-                {
-                    ListBoxItem lBI = new ListBoxItem();
-                    lBI = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromIndex(i);
-                    Record? recordOfLBI = listBox.Items.GetItemAt(i) as Record;
-
-                    if (recordOfLBI == null)
+                if (containsSpecialCheck){
+                    for (int i = 0; i < listBox.Items.Count; i++)
                     {
-                        return;
-                    }
-                    if (containsSpecialCheck)
-                    {
+                        var lBI = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromIndex(i);
+                        Record? recordOfLBI = listBox.Items.GetItemAt(i) as Record;
+
+                        if (recordOfLBI == null)
+                        {
+                            continue;
+                        }
                         if (CheckData(searchFor, recordOfLBI))
                         {
                             lBI.Visibility = System.Windows.Visibility.Visible;
@@ -68,20 +67,71 @@ namespace RecordingBook.Models
                             lBI.Visibility = System.Windows.Visibility.Collapsed;
                         }
                     }
-                    else if (!containsSpecialCheck)
+                }
+
+                else if (!containsSpecialCheck)
+                {
+                    searchText.Trim();
+                    string[] arrayOfCriteria = searchText.Split(' ').ToArray();
+                    if (arrayOfCriteria.Length>1)
                     {
-                        if (recordOfLBI.FirstName.ToLower().Contains(searchText) ||
-                            recordOfLBI.SecondName.ToLower().Contains(searchText) ||
-                            recordOfLBI.LastName.ToLower().Contains(searchText))
+                        for(int i = 0; i < listBox.Items.Count; i++)
                         {
-                            lBI.Visibility = System.Windows.Visibility.Visible;
-                        }
-                        else
-                        {
-                            lBI.Visibility = System.Windows.Visibility.Collapsed;
+                            var lBI = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromIndex(i);
+                            Record? recordOfLBI = listBox.Items.GetItemAt(i) as Record;
+                            if (recordOfLBI == null)
+                            {
+                                continue;
+                            }
+                            int characteristicSimilarity = arrayOfCriteria.Length;
+                            for (int j = 0; j < arrayOfCriteria.Length; j++)
+                            {
+                                if (recordOfLBI.SecondName.ToLower().Contains(arrayOfCriteria[j]))
+                                {
+                                    characteristicSimilarity--;
+                                }
+                                if (recordOfLBI.FirstName.ToLower().Contains(arrayOfCriteria[j]))
+                                {
+                                    characteristicSimilarity--;
+                                }
+                                if (recordOfLBI.LastName.ToLower().Contains(arrayOfCriteria[j]))
+                                {
+                                    characteristicSimilarity--;
+                                }
+                                if(characteristicSimilarity == 0)
+                                {
+                                    lBI.Visibility = System.Windows.Visibility.Visible;
+                                }
+                                else
+                                {
+                                    lBI.Visibility = System.Windows.Visibility.Collapsed;
+                                }
+                            }
                         }
                     }
+                    else
+                    {
+                        for (int i = 0; i < listBox.Items.Count; i++)
+                        {
+                            var lBI = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromIndex(i);
+                            Record? recordOfLBI = listBox.Items.GetItemAt(i) as Record;
+                            if (recordOfLBI == null)
+                            {
+                                continue;
+                            }
 
+                            if (recordOfLBI.FirstName.ToLower().Contains(searchText) ||
+                                recordOfLBI.SecondName.ToLower().Contains(searchText) ||
+                                recordOfLBI.LastName.ToLower().Contains(searchText))
+                            {
+                                lBI.Visibility = System.Windows.Visibility.Visible;
+                            }
+                            else
+                            {
+                                lBI.Visibility = System.Windows.Visibility.Collapsed;
+                            }
+                        }
+                    }
                 }
             }
 

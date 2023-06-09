@@ -125,7 +125,7 @@
                                 DockPanel.Dock="Left"
                                 FontSize="20"
                                 PreviewMouseLeftButtonDown="SelectAllText"
-                                Text="Search the record"
+                                Text="Знайти запис"
                                 TextChanged="SearchField_Changed" />
                             <Button
                                 Name="SearchButton"
@@ -134,9 +134,35 @@
                                 HorizontalAlignment="Right"
                                 BorderThickness="0"
                                 Click="SearchButton_click"
-                                DockPanel.Dock="Right">
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource SomeButtonStyle}">
+
+                                <Button.Resources>
+                                    <ImageBrush x:Key="IMB_searchBDefault" ImageSource="pack://application:,,,/images/search_480px.png" />
+                                    <ImageBrush x:Key="IMB_searchBEnter" ImageSource="pack://application:,,,/images/search_480px_enter.png" />
+                                </Button.Resources>
+                                <Button.Triggers>
+                                    <EventTrigger RoutedEvent="Button.MouseEnter">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource IMB_searchBEnter}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="Button.MouseLeave">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource IMB_searchBDefault}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Button.Triggers>
                                 <Button.Background>
-                                    <ImageBrush ImageSource="/images/search_480px.png" />
+                                    <ImageBrush ImageSource="pack://application:,,,/images/search_480px.png" />
                                 </Button.Background>
                             </Button>
                         </DockPanel>
@@ -488,30 +514,32 @@
                 </Grid>
             </Grid>
         </Border>
-        <TextBlock
-            x:Name="TBNothingIs"
-            Grid.Column="1"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            FontSize="40"
-            Text="Поки нічого немає">
-            <TextBlock.Style>
-                <Style TargetType="TextBlock">
-                    <Style.Triggers>
-                        <MultiDataTrigger>
-                            <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding HasItems, ElementName=RecordList}" Value="True" />
-                                <Condition Binding="{Binding SelectedItem, ElementName=RecordList}" Value="{x:Null}" />
-                            </MultiDataTrigger.Conditions>
-                            <Setter Property="Visibility" Value="Hidden" />
-                        </MultiDataTrigger>
-                        <DataTrigger Binding="{Binding SelectedItem, ElementName=RecordList}" Value="{x:Null}">
-                            <Setter Property="Visibility" Value="Visible" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBlock.Style>
-        </TextBlock>
+        <Grid Grid.Column="1" Background="#edf9ff">
+            <TextBlock
+                x:Name="TBNothingIs"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="#edf9ff"
+                FontSize="40"
+                Text="Поки нічого немає">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding HasItems, ElementName=RecordList}" Value="True" />
+                                    <Condition Binding="{Binding SelectedItem, ElementName=RecordList}" Value="{x:Null}" />
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Visibility" Value="Hidden" />
+                            </MultiDataTrigger>
+                            <DataTrigger Binding="{Binding SelectedItem, ElementName=RecordList}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Grid>
         <Grid
             x:Name="SetBlock"
             Grid.Column="1"
